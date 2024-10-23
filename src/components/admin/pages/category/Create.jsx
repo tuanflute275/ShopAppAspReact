@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import * as categoryService from "../../../../../services/CategoryService";
+import * as categoryService from "../../../../services/CategoryService";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as categoryService from "../../../../../services/CategoryService";
+import * as categoryService from "../../../../services/CategoryService";
 import Swal from "sweetalert2";
 
 const UpdateCategory = () => {

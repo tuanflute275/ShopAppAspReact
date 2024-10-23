@@ -9,7 +9,7 @@ const AdminMasterLayout = ({ child }) => {
       <AdminSideBar />
       <AdminHeader />
       {child}
-      <AdminFooter />
+      {/* <AdminFooter /> */}
     </div>
   );
 };

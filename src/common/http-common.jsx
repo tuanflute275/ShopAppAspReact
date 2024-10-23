@@ -4,10 +4,9 @@ let tokenLocalStorage = localStorage.getItem("token");
 const token =
   tokenLocalStorage != null ? tokenLocalStorage.replaceAll('"', "") : "";
 const axiosInstance = axios.create({
-  baseUrl: process.env.REACT_APP_API_ASP,
+  baseURL: process.env.REACT_APP_API_ASP,
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: `Bearer ${token}`,
   },

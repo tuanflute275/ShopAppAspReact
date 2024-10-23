@@ -1,0 +1,24 @@
+.table-container {
+    height: 425px;
+    max-height: 425px; /* Chiều cao tối đa cho vùng chứa bảng */
+    overflow-y: auto; /* Cho phép cuộn dọc */
+    border: 1px solid #ccc; /* Thêm viền cho vùng chứa */
+  }
+  
+  .table {
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+    border-collapse: collapse; /* Xóa khoảng cách giữa các ô */
+  }
+  
+  .table thead {
+    position: sticky; /* Đặt vị trí cố định cho phần đầu bảng */
+    top: 0; /* Giữ phần đầu ở phía trên khi cuộn */
+    background-color: #f8f9fa; /* Màu nền cho phần đầu */
+    z-index: 10; /* Đảm bảo phần đầu không bị che khuất */
+  }
+  
+  .table th, .table td {
+    padding: 10px; /* Thêm khoảng cách trong các ô */
+    text-align: left; /* Căn lề trái cho văn bản */
+    border-bottom: 1px solid #dee2e6; /* Đường viền dưới cho các ô */
+  }

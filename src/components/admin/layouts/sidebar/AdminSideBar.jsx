@@ -34,6 +34,11 @@ const AdminSideBar = () => {
               </Link>
             </li>
             <li>
+              <Link to={"/admin/banner"}>
+                <i className="ri-record-circle-line"></i>Quản Lý banner
+              </Link>
+            </li>
+            <li>
               <Link to={"/admin/category"}>
                 <i className="ri-record-circle-line"></i>Quản Lý Danh Mục
               </Link>
@@ -46,6 +51,11 @@ const AdminSideBar = () => {
             <li>
               <Link to={"/admin/blog"}>
                 <i className="ri-record-circle-line"></i>Quản Lý Tin Tức
+              </Link>
+            </li>
+            <li>
+              <Link to={"/admin/log"}>
+                <i className="ri-record-circle-line"></i>Hoạt động tài khoản
               </Link>
             </li>
           </ul>
