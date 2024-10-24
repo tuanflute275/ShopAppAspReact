@@ -12,7 +12,7 @@ const AdminSideBar = () => {
             alt=""
           />
           <div className="logo-title">
-            <span className="text-primary text-uppercase">NhasachTV</span>
+            <span className="text-primary text-uppercase">Admin Panel</span>
           </div>
         </Link>
         <div className="iq-menu-bt-sidebar">
@@ -30,50 +30,61 @@ const AdminSideBar = () => {
           <ul id="iq-sidebar-toggle" className="iq-menu">
             <li>
               <Link to={"/admin"}>
-                <i className="las la-home iq-arrow-left"></i>Bảng Điều Khiển
+                <i className="las la-home iq-arrow-left"></i>Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to={"/admin/account"}>
+                <i className="ri-record-circle-line"></i>Account Management
+              </Link>
+            </li>
+            <li>
+              <Link to={"/admin/role"}>
+                <i className="ri-record-circle-line"></i>Role Management
+              </Link>
+            </li>
+            <li>
+              <Link to={"/admin/user-role"}>
+                <i className="ri-record-circle-line"></i>Account Role Management
               </Link>
             </li>
             <li>
               <Link to={"/admin/banner"}>
-                <i className="ri-record-circle-line"></i>Quản Lý banner
+                <i className="ri-record-circle-line"></i>Banner Management
               </Link>
             </li>
             <li>
               <Link to={"/admin/category"}>
-                <i className="ri-record-circle-line"></i>Quản Lý Danh Mục
+                <i className="ri-record-circle-line"></i>Category Management
               </Link>
             </li>
             <li>
               <Link to={"/admin/product"}>
-                <i className="ri-record-circle-line"></i>Quản Lý Sản Phẩm
+                <i className="ri-record-circle-line"></i>Product Management
               </Link>
             </li>
             <li>
               <Link to={"/admin/blog"}>
-                <i className="ri-record-circle-line"></i>Quản Lý Tin Tức
+                <i className="ri-record-circle-line"></i>Blog Management
+              </Link>
+            </li>
+            <li>
+              <Link to={"/admin/notify"}>
+                <i className="ri-record-circle-line"></i>Notify Management
+              </Link>
+            </li>
+            <li>
+              <Link to={"/admin/subscription"}>
+                <i className="ri-record-circle-line"></i>Subcription Management
               </Link>
             </li>
             <li>
               <Link to={"/admin/log"}>
-                <i className="ri-record-circle-line"></i>Hoạt động tài khoản
+                <i className="ri-record-circle-line"></i>Log Management
               </Link>
             </li>
           </ul>
         </nav>
-        <div id="sidebar-bottom" className="p-3 position-relative">
-          <div className="iq-card">
-            <div className="iq-card-body">
-              <div className="sidebarbottom-content">
-                <button
-                  type="submit"
-                  className="btn w-100 btn-primary mt-4 view-more"
-                >
-                  NhasachTV
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

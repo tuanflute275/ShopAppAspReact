@@ -1,47 +1,58 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import * as bannerService from "../../../../services/BannerService";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import * as blogService from "../../../../services/BlogService";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const Create = () => {
+const Edit = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [data, setData] = useState({});
   const [imgPreview, setImgPreview] = useState();
+
+  const fetchData = async () => {
+    const result = await blogService.findById(id);
+    setData(result[0].data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
   const formik = useFormik({
     initialValues: {
       Title: "",
       ImageFile: null,
+      Description: "",
     },
-    validationSchema: Yup.object({
-      Title: Yup.string()
-        .required()
-        .min(2),
-      ImageFile: Yup.mixed().required(),
-    }),
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("Title", values.Title);
-      formData.append("ImageFile", values.ImageFile);
+      formData.append("BlogTitle", values.Title ?? data.blogTitle);
+      formData.append("BlogDescription", values.Description ?? data.blogDescription);
+      formData.append("UserId", 1);
+      if (values.ImageFile && values.ImageFile != null) {
+        formData.append("ImageFile", values.ImageFile);
+      }else{
+        formData.append("OldImage", data.blogImage);
+      }
 
-      // Gọi API để lưu banner
-      const [result, error] = await bannerService.save(formData);
+      const [result, error] = await blogService.update(id, formData);
       if (result) {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Added successfully",
+          title: "Updated successfully",
           showConfirmButton: false,
           timer: 1500,
         });
-        navigate("/admin/banner");
+        navigate("/admin/blog");
       }
       if (error) {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: "Failed to add!",
+          title: "Failed to update!",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -58,15 +69,26 @@ const Create = () => {
     }
   };
 
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  if (formik.values.Title === "" && data) {
+    formik.setValues({
+      Title: data.title,
+      ImageFile: null,
+    });
+  }
+  
   return (
-    <div id="content-page" className="content-page">
+    <div id="content-page" className="content-page" style={{paddingTop: "70px"}}>
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
             <div className="iq-card">
               <div className="iq-card-header d-flex justify-content-between">
                 <div className="iq-header-title">
-                  <h4 className="card-title">Add Banner</h4>
+                  <h4 className="card-title">Update Blog</h4>
                 </div>
               </div>
               <div className="iq-card-body">
@@ -74,7 +96,6 @@ const Create = () => {
                   onSubmit={formik.handleSubmit}
                   encType="multipart/form-data"
                 >
-                 
                   <div className="form-group">
                     <label htmlFor="image" className="col-md-3 col-form-label">
                       Image
@@ -107,7 +128,7 @@ const Create = () => {
                         data-toggle="tooltip"
                         title="Click to change the image"
                         data-placement="bottom"
-                        src="/add-image-icon.jpg"
+                        src={data.blogImage}
                       />
                         )
                       }
@@ -128,15 +149,15 @@ const Create = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Title:</label>
+                    <label>Title</label>
                     <input
                       type="text"
                       name="Title"
                       className="form-control"
                       placeholder="Enter your title..."
-                      value={formik.values.Title}
+                      value={formik.values.Title || data.blogTitle}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur} 
+                      onBlur={formik.handleBlur}
                     />
                     {formik.errors.Title && formik.touched.Title && (
                       <small className="text-danger">
@@ -144,10 +165,30 @@ const Create = () => {
                       </small>
                     )}
                   </div>
+
+                  <div className="form-group">
+                    <label>Description</label>
+                    <textarea
+                      name="Description"
+                      className="form-control"
+                      rows="5"
+                      placeholder="Enter your description..."
+                      value={formik.values.Description || data.blogDescription}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    ></textarea>
+                    {formik.errors.Description &&
+                      formik.touched.Description && (
+                        <small className="text-danger">
+                          {formik.errors.Description}
+                        </small>
+                      )}
+                  </div>
+
                   <button type="submit" className="btn btn-primary">
-                    Create
+                    Update
                   </button>
-                  <Link to={"/admin/banner"} className="btn btn-danger ml-2">
+                  <Link to={"/admin/blog"} className="btn btn-danger ml-2">
                     Back
                   </Link>
                 </form>
@@ -160,4 +201,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Edit;

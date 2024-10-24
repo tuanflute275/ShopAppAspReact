@@ -189,14 +189,14 @@ const ListCategory = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">Danh sách danh mục</h4>
+                  <h4 class="card-title">List Category</h4>
                 </div>
                 <div class="iq-card-header-toolbar d-flex align-items-center">
                   <Link
                     to={"/admin/category/create"}
                     className="btn btn-primary"
                   >
-                    Thêm mới danh mục
+                    Add Category
                   </Link>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const ListCategory = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Tìm kiếm theo tên danh mục..."
+                        placeholder="Search by name category..."
                         name="name"
                       />
                     </div>
@@ -220,32 +220,28 @@ const ListCategory = () => {
                     <div class="col-3 p-0">
                       <div class="d-flex">
                         <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Sắp xếp -----</option>
-                          <option value="Id-ASC">
-                            Sắp xếp theo stt (a - z)
-                          </option>
-                          <option value="Id-DESC">
-                            Sắp xếp theo stt (z - a)
-                          </option>
+                          <option value="">----- Order by -----</option>
+                          <option value="Id-ASC">Sorting By Id (a - z)</option>
+                          <option value="Id-DESC">Sorting By Id (z - a)</option>
                           <option value="Name-ASC">
-                            Sắp xếp theo tên (a - z)
+                            Sorting By Name (a - z)
                           </option>
                           <option value="Name-DESC">
-                            Sắp xếp theo tên (z - a)
+                            Sorting By Name (z - a)
                           </option>
                         </select>
                       </div>
                     </div>
                     <div class="col-3 text-right p-0 m-0">
                       <button type="submit" class="btn rounded-0 btn-primary">
-                        Tìm kiếm
+                        Search
                       </button>
                       <button
                         type="button"
                         onClick={handleReset}
                         class="btn rounded-0 btn-danger text-white"
                       >
-                        Làm mới
+                        Reset
                       </button>
                     </div>
                   </div>
@@ -259,10 +255,10 @@ const ListCategory = () => {
                     <thead>
                       <tr>
                         <th width="5%">#</th>
-                        <th>Tên danh mục</th>
-                        <th>Tên slug</th>
-                        <th>Trạng thái</th>
-                        <th width="10%">Hoạt động</th>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th width="8%">Status</th>
+                        <th width="10%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -274,7 +270,7 @@ const ListCategory = () => {
                                 <td>{item.categoryId}</td>
                                 <td>{item.categoryName}</td>
                                 <td>{item.categorySlug}</td>
-                                <td>{item.categoryStatus ? "Hiện" : "Ẩn"}</td>
+                                <td>{item.categoryStatus ? "Active" : "InActive"}</td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <Link
@@ -282,7 +278,7 @@ const ListCategory = () => {
                                       className="bg-primary"
                                       data-toggle="tooltip"
                                       data-placement="top"
-                                      title="Sửa"
+                                      title="Edit"
                                     >
                                       <i className="ri-pencil-line"></i>
                                     </Link>
@@ -290,8 +286,8 @@ const ListCategory = () => {
                                       className="bg-danger"
                                       data-toggle="tooltip"
                                       data-placement="top"
-                                      title=""
-                                      data-original-title="Xoá"
+                                      title="Delete"
+                                      data-original-title="Delete"
                                       onClick={() =>
                                         handleDelete(item.categoryId)
                                       }
@@ -327,7 +323,7 @@ const ListCategory = () => {
                             }}
                             className="text-center"
                           >
-                            Không có dữ liệu
+                            No data available
                           </td>
                         </tr>
                       </tbody>
@@ -349,7 +345,7 @@ const ListCategory = () => {
                         onClick={() => handlePageChange(1)}
                         disabled={currentPage === 1}
                       >
-                        Về đầu trang
+                        First
                       </button>
                     </li>
                     <li
@@ -393,7 +389,7 @@ const ListCategory = () => {
                         onClick={() => handlePageChange(totalPages)}
                         disabled={currentPage === totalPages}
                       >
-                        Về cuối trang
+                        Last
                       </button>
                     </li>
                   </ul>

@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as categoryService from "../../../../services/CategoryService";
+import * as notifyService from "../../../../services/NotifyService";
 import Swal from "sweetalert2";
 
 const UpdateCategory = () => {
   const { id } = useParams();
 
   const initState = {
-    categoryName: "",
-    categoryStatus: true,
+    message: "",
+    isRead: true,
   };
 
   const initData = {
-    categoryName: "",
-    categoryStatus: true,
+    message: "",
+    isRead: true,
   };
 
   const [apiData, setApiData] = useState(initData);
@@ -21,7 +21,7 @@ const UpdateCategory = () => {
   const navigate = useNavigate();
 
   const fetchApiData = async (id) => {
-    const [result, error] = await categoryService.findById(id);
+    const [result, error] = await notifyService.findById(id);
     if (result) {
       setApiData(result.data);
     } else {
@@ -42,16 +42,15 @@ const UpdateCategory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newData = {
-      categoryName: postData.categoryName
-        ? postData.categoryName
-        : apiData.categoryName,
-      categoryStatus: postData.categoryStatus
-        ? postData.categoryStatus === "true"
-        : apiData.categoryStatus,
+      message: postData.message
+        ? postData.message
+        : apiData.message,
+      isRead: postData.isRead
+        ? postData.isRead === "true"
+        : apiData.isRead,
     };
 
-    const [result, error] = await categoryService.update(id, newData);
-    console.log(result);
+    const [result, error] = await notifyService.update(id, newData);
     if (result) {
       Swal.fire({
         position: "top-end",
@@ -60,7 +59,7 @@ const UpdateCategory = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate("/admin/category");
+      navigate("/admin/notify");
     }
     if (error) {
       Swal.fire({
@@ -85,57 +84,57 @@ const UpdateCategory = () => {
             <div className="iq-card">
               <div className="iq-card-header d-flex justify-content-between">
                 <div className="iq-header-title">
-                  <h4 className="card-title">Update Category</h4>
+                  <h4 className="card-title">Update Notify</h4>
                 </div>
               </div>
               <div className="iq-card-body">
                 <form onSubmit={(e) => handleSubmit(e)}>
                   <div className="form-group">
-                    <label>Name</label>
+                    <label>Message</label>
                     <input
                       type="text"
-                      name="categoryName"
+                      name="message"
                       className="form-control"
                       placeholder="Enter your name..."
-                      defaultValue={apiData.categoryName}
+                      defaultValue={apiData.message}
                       onChange={(e) => handleChangeValue(e)}
                     />
                   </div>
                   <div className="form-group">
-                    <label className="d-block">Status</label>
+                    <label className="d-block">IsRead</label>
                     <div className="custom-control custom-radio custom-control-inline">
                       <input
                         type="radio"
                         id="status"
-                        name="categoryStatus"
+                        name="isRead"
                         className="custom-control-input"
-                        checked={apiData.categoryStatus === true}
+                        checked={apiData.isRead === true}
                         value="true"
                         onChange={(e) => handleChangeValue(e)}
                       />
                       <label className="custom-control-label" htmlFor="status">
-                        Active
+                        Read
                       </label>
                     </div>
                     <div className="custom-control custom-radio custom-control-inline">
                       <input
                         type="radio"
                         id="status2"
-                        name="categoryStatus"
+                        name="isRead"
                         className="custom-control-input"
-                        checked={apiData.categoryStatus === false}
+                        checked={apiData.isRead === false}
                         value="false"
                         onChange={(e) => handleChangeValue(e)}
                       />
                       <label className="custom-control-label" htmlFor="status2">
-                        InActive
+                        Unread
                       </label>
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary">
                     Update
                   </button>
-                  <Link to={"/admin/category"} className="btn btn-danger ml-2">
+                  <Link to={"/admin/notify"} className="btn btn-danger ml-2">
                     Back
                   </Link>
                 </form>

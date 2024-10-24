@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import * as bannerService from "../../../../services/BannerService";
+import * as uroleService from "../../../../services/UserRoleService";
 import Swal from "sweetalert2";
 
 const Index = () => {
@@ -11,7 +11,7 @@ const Index = () => {
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await bannerService.findAll();
+    const [res, err] = await uroleService.findAll();
     if (res) {
       setApiData(res.data.data);
       if (res.data.length > 0) setTotalPages(res.data.totalPages);
@@ -20,26 +20,10 @@ const Index = () => {
     }
   };
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const name = formData.get("name") || null;
-    const sort = formData.get("sort") || "Id-DESC";
-    const page = formData.get("page") || 1;
-
-    const [res, err] = await bannerService.search(name, sort, page);
-    if (res) {
-      setApiData(res.data.data);
-      setTotalPages(res.data.totalPages);
-    } else {
-      console.log(err);
-    }
-  };
-
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await bannerService.search(null, "Id-DESC", page);
+    const [res, err] = await uroleService.search(null, "Id-DESC", page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -48,13 +32,7 @@ const Index = () => {
     }
   };
 
-  const handleReset = () => {
-    formRef.current.reset();
-    setCurrentPage(1);
-    fetchApiData();
-  };
-
-  const handleDelete = async (id) => {
+  const handleDelete = async (userId) => {
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -66,7 +44,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await bannerService.remove(id);
+      const [res, err] = await uroleService.remove(userId);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -189,66 +167,23 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Banner</h4>
+                  <h4 class="card-title">List User Role</h4>
                 </div>
                 <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <Link to={"/admin/banner/create"} className="btn btn-primary">
-                    Add Banner
+                  <Link
+                    to={"/admin/user-role/create"}
+                    className="btn btn-primary"
+                  >
+                    Add User Role
                   </Link>
                 </div>
               </div>
 
               <div class="iq-card-body">
-                <form
-                  method="GET"
-                  ref={formRef}
-                  onSubmit={(e) => handleSearch(e)}
+                <div
+                  class="table-responsive table-container"
+                  style={{ height: "470px", maxHeight: "470px" }}
                 >
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="col-3 p-0">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search by name banner..."
-                        name="name"
-                      />
-                    </div>
-
-                    <div class="col-3 p-0">
-                      <div class="d-flex">
-                        <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Order By -----</option>
-                          <option value="Id-ASC">
-                            Sorting By Id (a - z)
-                          </option>
-                          <option value="Id-DESC">
-                            Sorting By Id (z - a)
-                          </option>
-                          <option value="Date-ASC">
-                            Sorting By Date (a - z)
-                          </option>
-                          <option value="Date-DESC">
-                            Sorting By Date (z - a)
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-3 text-right p-0 m-0">
-                      <button type="submit" class="btn rounded-0 btn-primary">
-                        Search
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleReset}
-                        class="btn rounded-0 btn-danger text-white"
-                      >
-                        Reset
-                      </button>
-                    </div>
-                  </div>
-                </form>
-
-                <div class="table-responsive table-container">
                   <table
                     class="data-tables table table-striped table-bordered"
                     style={{ width: "100%" }}
@@ -256,10 +191,8 @@ const Index = () => {
                     <thead>
                       <tr>
                         <th width="5%">#</th>
-                        <th width="5%">Image</th>
-                        <th>Title</th>
-                        <th width="18%">Create Date</th>
-                        <th width="18%">Update Date</th>
+                        <th>User Name</th>
+                        <th>Role Name</th>
                         <th width="10%">Action</th>
                       </tr>
                     </thead>
@@ -268,27 +201,14 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.bannerId}>
-                                <td>{item.bannerId}</td>
-                                <td>
-                                  <img
-                                    className="card-img"
-                                    style={{ width: "120px" }}
-                                    src={item.image}
-                                    alt={item.title}
-                                  />
-                                </td>
-                                <td>{item.title}</td>
-                                <td>
-                                  {new Date(item.createDate).toLocaleString()}
-                                </td>
-                                <td>
-                                  {new Date(item.updateDate).toLocaleString()}
-                                </td>
+                              <tr key={item.id}>
+                                <td>{item.id}</td>
+                                <td>{item.userName}</td>
+                                <td>{item.roleName}</td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <Link
-                                      to={`/admin/banner/edit/${item.bannerId}`}
+                                      to={`/admin/user-role/edit/${item.id}`}
                                       className="bg-primary"
                                       data-toggle="tooltip"
                                       data-placement="top"
@@ -303,7 +223,7 @@ const Index = () => {
                                       title="Delete"
                                       data-original-title="Delete"
                                       onClick={() =>
-                                        handleDelete(item.bannerId)
+                                        handleDelete(item.id)
                                       }
                                       style={{
                                         fontSize: "16px",
@@ -330,7 +250,7 @@ const Index = () => {
                       <tbody>
                         <tr>
                           <td
-                            colSpan={6}
+                            colSpan={5}
                             style={{
                               height: "350px",
                               background: "rgb(241 241 241)",

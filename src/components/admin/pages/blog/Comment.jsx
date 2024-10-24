@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import * as bannerService from "../../../../services/BannerService";
+import { Link, useParams } from "react-router-dom";
+import * as blogService from "../../../../services/BlogService";
+import * as blogCommentService from "../../../../services/BlogCommentService";
 import Swal from "sweetalert2";
 
 const Index = () => {
+  const { id } = useParams();
   const formRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -11,8 +13,9 @@ const Index = () => {
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await bannerService.findAll();
+    const [res, err] = await blogCommentService.findById(id);
     if (res) {
+      console.log(res.data.data);
       setApiData(res.data.data);
       if (res.data.length > 0) setTotalPages(res.data.totalPages);
     } else {
@@ -27,7 +30,7 @@ const Index = () => {
     const sort = formData.get("sort") || "Id-DESC";
     const page = formData.get("page") || 1;
 
-    const [res, err] = await bannerService.search(name, sort, page);
+    const [res, err] = await blogCommentService.search(id,name, sort, page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -39,7 +42,7 @@ const Index = () => {
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await bannerService.search(null, "Id-DESC", page);
+    const [res, err] = await blogService.search(null, "Id-DESC", page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -66,7 +69,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await bannerService.remove(id);
+      const [res, err] = await blogCommentService.remove(id);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -189,12 +192,7 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Banner</h4>
-                </div>
-                <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <Link to={"/admin/banner/create"} className="btn btn-primary">
-                    Add Banner
-                  </Link>
+                  <h4 class="card-title">List Blog Comment</h4>
                 </div>
               </div>
 
@@ -209,7 +207,7 @@ const Index = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Search by name banner..."
+                        placeholder="Search by name, email..."
                         name="name"
                       />
                     </div>
@@ -217,12 +215,14 @@ const Index = () => {
                     <div class="col-3 p-0">
                       <div class="d-flex">
                         <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Order By -----</option>
-                          <option value="Id-ASC">
-                            Sorting By Id (a - z)
+                          <option value="">----- Order by -----</option>
+                          <option value="Id-ASC">Sorting By Id (a - z)</option>
+                          <option value="Id-DESC">Sorting By Id (z - a)</option>
+                          <option value="Name-ASC">
+                            Sorting By Name (a - z)
                           </option>
-                          <option value="Id-DESC">
-                            Sorting By Id (z - a)
+                          <option value="Name-DESC">
+                            Sorting By Name (z - a)
                           </option>
                           <option value="Date-ASC">
                             Sorting By Date (a - z)
@@ -244,6 +244,12 @@ const Index = () => {
                       >
                         Reset
                       </button>
+                      <Link
+                        to={"/admin/blog"}
+                        class="btn rounded-0 btn-warning text-white"
+                      >
+                        Back
+                      </Link>
                     </div>
                   </div>
                 </form>
@@ -255,12 +261,13 @@ const Index = () => {
                   >
                     <thead>
                       <tr>
-                        <th width="5%">#</th>
-                        <th width="5%">Image</th>
-                        <th>Title</th>
-                        <th width="18%">Create Date</th>
-                        <th width="18%">Update Date</th>
-                        <th width="10%">Action</th>
+                        <th width="5%">#blog</th>
+                        <th width="15%">Email</th>
+                        <th width="10%">Name</th>
+                        <th width="20%">Message</th>
+                        <th width="10%">Create Date</th>
+                        <th width="10%">Update Date</th>
+                        <th width="5%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -268,17 +275,11 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.bannerId}>
-                                <td>{item.bannerId}</td>
-                                <td>
-                                  <img
-                                    className="card-img"
-                                    style={{ width: "120px" }}
-                                    src={item.image}
-                                    alt={item.title}
-                                  />
-                                </td>
-                                <td>{item.title}</td>
+                              <tr key={item.blogId}>
+                                <td>{item.blogId}</td>
+                                <td>{item.email}</td>
+                                <td>{item.name}</td>
+                                <td>{item.message}</td>
                                 <td>
                                   {new Date(item.createDate).toLocaleString()}
                                 </td>
@@ -287,15 +288,6 @@ const Index = () => {
                                 </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
-                                    <Link
-                                      to={`/admin/banner/edit/${item.bannerId}`}
-                                      className="bg-primary"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="Edit"
-                                    >
-                                      <i className="ri-pencil-line"></i>
-                                    </Link>
                                     <button
                                       className="bg-danger"
                                       data-toggle="tooltip"
@@ -303,7 +295,7 @@ const Index = () => {
                                       title="Delete"
                                       data-original-title="Delete"
                                       onClick={() =>
-                                        handleDelete(item.bannerId)
+                                        handleDelete(item.blogCommentId)
                                       }
                                       style={{
                                         fontSize: "16px",
@@ -330,7 +322,7 @@ const Index = () => {
                       <tbody>
                         <tr>
                           <td
-                            colSpan={6}
+                            colSpan={7}
                             style={{
                               height: "350px",
                               background: "rgb(241 241 241)",

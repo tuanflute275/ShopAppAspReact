@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import * as bannerService from "../../../../services/BannerService";
+import * as notifyService from "../../../../services/NotifyService";
 import Swal from "sweetalert2";
 
-const Index = () => {
+const Listnotify = () => {
   const formRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -11,11 +11,11 @@ const Index = () => {
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await bannerService.findAll();
+    const [res, err] = await notifyService.findAll();
     if (res) {
       setApiData(res.data.data);
       if (res.data.length > 0) setTotalPages(res.data.totalPages);
-    } else {
+    } else {        
       console.log(err);
     }
   };
@@ -27,7 +27,7 @@ const Index = () => {
     const sort = formData.get("sort") || "Id-DESC";
     const page = formData.get("page") || 1;
 
-    const [res, err] = await bannerService.search(name, sort, page);
+    const [res, err] = await notifyService.search(name, sort, page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -39,7 +39,7 @@ const Index = () => {
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await bannerService.search(null, "Id-DESC", page);
+    const [res, err] = await notifyService.search(null, "Id-DESC", page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -66,7 +66,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await bannerService.remove(id);
+      const [res, err] = await notifyService.remove(id);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -189,11 +189,11 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Banner</h4>
+                  <h4 class="card-title">List Notify</h4>
                 </div>
                 <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <Link to={"/admin/banner/create"} className="btn btn-primary">
-                    Add Banner
+                  <Link to={"/admin/notify/create"} className="btn btn-primary">
+                    Add Notify
                   </Link>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const Index = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Search by name banner..."
+                        placeholder="Search by notify..."
                         name="name"
                       />
                     </div>
@@ -217,18 +217,14 @@ const Index = () => {
                     <div class="col-3 p-0">
                       <div class="d-flex">
                         <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Order By -----</option>
-                          <option value="Id-ASC">
-                            Sorting By Id (a - z)
+                          <option value="">----- Order by -----</option>
+                          <option value="Id-ASC">Sorting By Id (a - z)</option>
+                          <option value="Id-DESC">Sorting By Id (z - a)</option>
+                          <option value="Name-ASC">
+                            Sorting By Name (a - z)
                           </option>
-                          <option value="Id-DESC">
-                            Sorting By Id (z - a)
-                          </option>
-                          <option value="Date-ASC">
-                            Sorting By Date (a - z)
-                          </option>
-                          <option value="Date-DESC">
-                            Sorting By Date (z - a)
+                          <option value="Name-DESC">
+                            Sorting By Name (z - a)
                           </option>
                         </select>
                       </div>
@@ -256,10 +252,9 @@ const Index = () => {
                     <thead>
                       <tr>
                         <th width="5%">#</th>
-                        <th width="5%">Image</th>
-                        <th>Title</th>
-                        <th width="18%">Create Date</th>
-                        <th width="18%">Update Date</th>
+                        <th>Message</th>
+                        <th width="8%">IsRead</th>
+                        <th width="18%">Date Send</th>
                         <th width="10%">Action</th>
                       </tr>
                     </thead>
@@ -268,27 +263,19 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.bannerId}>
-                                <td>{item.bannerId}</td>
+                              <tr key={item.notificationId}>
+                                <td>{item.notificationId}</td>
+                                <td>{item.message}</td>
                                 <td>
-                                  <img
-                                    className="card-img"
-                                    style={{ width: "120px" }}
-                                    src={item.image}
-                                    alt={item.title}
-                                  />
-                                </td>
-                                <td>{item.title}</td>
-                                <td>
-                                  {new Date(item.createDate).toLocaleString()}
+                                  {item.isRead ? "Read" : "Unread"}
                                 </td>
                                 <td>
-                                  {new Date(item.updateDate).toLocaleString()}
+                                  {new Date(item.dateSent).toLocaleString()}
                                 </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <Link
-                                      to={`/admin/banner/edit/${item.bannerId}`}
+                                      to={`/admin/notify/edit/${item.notificationId}`}
                                       className="bg-primary"
                                       data-toggle="tooltip"
                                       data-placement="top"
@@ -303,7 +290,7 @@ const Index = () => {
                                       title="Delete"
                                       data-original-title="Delete"
                                       onClick={() =>
-                                        handleDelete(item.bannerId)
+                                        handleDelete(item.notificationId)
                                       }
                                       style={{
                                         fontSize: "16px",
@@ -330,7 +317,7 @@ const Index = () => {
                       <tbody>
                         <tr>
                           <td
-                            colSpan={6}
+                            colSpan={5}
                             style={{
                               height: "350px",
                               background: "rgb(241 241 241)",
@@ -417,4 +404,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Listnotify;

@@ -189,7 +189,7 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">Hoạt động tài khoản</h4>
+                  <h4 class="card-title">List Log</h4>
                 </div>
               </div>
 
@@ -204,7 +204,7 @@ const Index = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Tìm kiếm theo tên người dùng,tên thiết bị..."
+                        placeholder="Enter your username, worktation..."
                         name="name"
                       />
                     </div>
@@ -212,32 +212,32 @@ const Index = () => {
                     <div class="col-3 p-0">
                       <div class="d-flex">
                         <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Sắp xếp -----</option>
+                          <option value="">----- Order by -----</option>
                           <option value="Id-ASC">
-                            Sắp xếp theo stt (a - z)
+                            Sorting By Id (a - z)
                           </option>
                           <option value="Id-DESC">
-                            Sắp xếp theo stt (z - a)
+                            Sorting By Id (z - a)
                           </option>
                           <option value="Name-ASC">
-                            Sắp xếp theo thời gian (a - z)
+                            Sorting By Date (a - z)
                           </option>
                           <option value="Name-DESC">
-                            Sắp xếp theo thời gian (z - a)
+                            Sorting By Date (z - a)
                           </option>
                         </select>
                       </div>
                     </div>
                     <div class="col-3 text-right p-0 m-0">
                       <button type="submit" class="btn rounded-0 btn-primary">
-                        Tìm kiếm
+                        Search
                       </button>
                       <button
                         type="button"
                         onClick={handleReset}
                         class="btn rounded-0 btn-danger text-white"
                       >
-                        Làm mới
+                        Reset
                       </button>
                     </div>
                   </div>
@@ -251,12 +251,12 @@ const Index = () => {
                     <thead>
                       <tr>
                         <th width="5%">#</th>
-                        <th width="12%">Tên tài khoản</th>
-                        <th width="12%">Tên thiết bị</th>
-                        <th width="15%">Đường dẫn</th>
-                        <th width="8%">Địa chỉ IPV4</th>
-                        <th width="14%">Thời gian thực hiện</th>
-                        <th width="10%">Hoạt động</th>
+                        <th width="12%">Username</th>
+                        <th width="12%">Worktation</th>
+                        <th width="15%">Request</th>
+                        <th width="8%">IP Adsress</th>
+                        <th width="14%">Time Action</th>
+                        <th width="10%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -281,8 +281,8 @@ const Index = () => {
                                       className="bg-danger"
                                       data-toggle="tooltip"
                                       data-placement="top"
-                                      title=""
-                                      data-original-title="Xoá"
+                                      title="Delete"
+                                      data-original-title="Delete"
                                       onClick={() => handleDelete(item.logId)}
                                       style={{
                                         fontSize: "16px",
@@ -316,7 +316,7 @@ const Index = () => {
                             }}
                             className="text-center"
                           >
-                            Không có dữ liệu
+                            No data available
                           </td>
                         </tr>
                       </tbody>
@@ -338,7 +338,7 @@ const Index = () => {
                         onClick={() => handlePageChange(1)}
                         disabled={currentPage === 1}
                       >
-                        Về đầu trang
+                        First
                       </button>
                     </li>
                     <li
@@ -382,7 +382,7 @@ const Index = () => {
                         onClick={() => handlePageChange(totalPages)}
                         disabled={currentPage === totalPages}
                       >
-                        Về cuối trang
+                        Last
                       </button>
                     </li>
                   </ul>

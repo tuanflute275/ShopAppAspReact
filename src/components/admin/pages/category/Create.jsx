@@ -14,18 +14,17 @@ const AddCategory = () => {
     },
     validationSchema: Yup.object({
       categoryName: Yup.string()
-        .required("Không được để trống")
-        .min(2, "Tối thiểu 2 kí tự"),
+        .required()
+        .min(2),
     }),
     onSubmit: async (values) => {
-      console.log(values);
       values.categoryStatus = values.categoryStatus === "false" ? false : true;
       const [result, error] = await categoryService.save(values);
       if (result) {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Add Successfully",
+          title: "Added successfully",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -35,7 +34,7 @@ const AddCategory = () => {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: "Add Failed",
+          title: "Failed to update!",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -52,18 +51,18 @@ const AddCategory = () => {
             <div className="iq-card">
               <div className="iq-card-header d-flex justify-content-between">
                 <div className="iq-header-title">
-                  <h4 className="card-title">Thêm danh mục</h4>
+                  <h4 className="card-title">Add Category</h4>
                 </div>
               </div>
               <div className="iq-card-body">
                 <form onSubmit={formik.handleSubmit}>
                   <div className="form-group">
-                    <label>Tên danh mục:</label>
+                    <label>Name</label>
                     <input
                       type="text"
                       name="categoryName"
                       className="form-control"
-                      placeholder="Nhập tên danh mục tại đây..."
+                      placeholder="Enter your name..."
                       value={formik.values.categoryName}
                       onChange={formik.handleChange}
                     />
@@ -76,7 +75,7 @@ const AddCategory = () => {
                   </div>
 
                   <div className="form-group">
-                    <label className="d-block">Trạng thái:</label>
+                    <label className="d-block">Status</label>
                     <div className="custom-control custom-radio custom-control-inline">
                       <input
                         type="radio"
@@ -88,7 +87,7 @@ const AddCategory = () => {
                         onChange={formik.handleChange}
                       />
                       <label className="custom-control-label" htmlFor="status">
-                        Hiện
+                        Active
                       </label>
                     </div>
                     <div className="custom-control custom-radio custom-control-inline">
@@ -101,15 +100,15 @@ const AddCategory = () => {
                         onChange={formik.handleChange}
                       />
                       <label className="custom-control-label" htmlFor="status2">
-                        Ẩn
+                        InActive
                       </label>
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary">
-                    Gửi
+                    Create
                   </button>
                   <Link to={"/admin/category"} className="btn btn-danger ml-2">
-                    Trở lại
+                    Back
                   </Link>
                 </form>
               </div>

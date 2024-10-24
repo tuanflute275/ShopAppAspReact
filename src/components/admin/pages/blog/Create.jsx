@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import * as bannerService from "../../../../services/BannerService";
+import * as blogService from "../../../../services/BlogService";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +13,7 @@ const Create = () => {
     initialValues: {
       Title: "",
       ImageFile: null,
+      Description: "",
     },
     validationSchema: Yup.object({
       Title: Yup.string()
@@ -22,11 +23,12 @@ const Create = () => {
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("Title", values.Title);
+      formData.append("BlogTitle", values.Title);
       formData.append("ImageFile", values.ImageFile);
+      formData.append("BlogDescription", values.Description);
+      formData.append("UserId", 1);
 
-      // Gọi API để lưu banner
-      const [result, error] = await bannerService.save(formData);
+      const [result, error] = await blogService.save(formData);
       if (result) {
         Swal.fire({
           position: "top-end",
@@ -35,7 +37,7 @@ const Create = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-        navigate("/admin/banner");
+        navigate("/admin/blog");
       }
       if (error) {
         Swal.fire({
@@ -59,14 +61,14 @@ const Create = () => {
   };
 
   return (
-    <div id="content-page" className="content-page">
+    <div id="content-page" className="content-page" style={{paddingTop: "70px"}}>
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
             <div className="iq-card">
               <div className="iq-card-header d-flex justify-content-between">
                 <div className="iq-header-title">
-                  <h4 className="card-title">Add Banner</h4>
+                  <h4 className="card-title">Add Blog</h4>
                 </div>
               </div>
               <div className="iq-card-body">
@@ -74,44 +76,39 @@ const Create = () => {
                   onSubmit={formik.handleSubmit}
                   encType="multipart/form-data"
                 >
-                 
                   <div className="form-group">
                     <label htmlFor="image" className="col-md-3 col-form-label">
                       Image
                     </label>
                     <div className="col-md-9 col-xl-8">
-                      {
-                        imgPreview && imgPreview 
-                        ? (
-                          <img
-                        style={{
-                          height: "200px",
-                          width: "200px",
-                          cursor: "pointer",
-                        }}
-                        class="thumbnail rounded-circle"
-                        data-toggle="tooltip"
-                        title="Click to change the image"
-                        data-placement="bottom"
-                        src={URL.createObjectURL(imgPreview)}
-                      />
-                        ) 
-                        : (
-                          <img
-                        style={{
-                          height: "200px",
-                          width: "200px",
-                          cursor: "pointer",
-                        }}
-                        class="thumbnail rounded-circle"
-                        data-toggle="tooltip"
-                        title="Click to change the image"
-                        data-placement="bottom"
-                        src="/add-image-icon.jpg"
-                      />
-                        )
-                      }
-                    
+                      {imgPreview && imgPreview ? (
+                        <img
+                          style={{
+                            height: "200px",
+                            width: "200px",
+                            cursor: "pointer",
+                          }}
+                          class="thumbnail rounded-circle"
+                          data-toggle="tooltip"
+                          title="Click to change the image"
+                          data-placement="bottom"
+                          src={URL.createObjectURL(imgPreview)}
+                        />
+                      ) : (
+                        <img
+                          style={{
+                            height: "200px",
+                            width: "200px",
+                            cursor: "pointer",
+                          }}
+                          class="thumbnail rounded-circle"
+                          data-toggle="tooltip"
+                          title="Click to change the image"
+                          data-placement="bottom"
+                          src="/add-image-icon.jpg"
+                        />
+                      )}
+
                       <input
                         type="file"
                         name="fileUpload"
@@ -128,7 +125,7 @@ const Create = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Title:</label>
+                    <label>Title</label>
                     <input
                       type="text"
                       name="Title"
@@ -136,7 +133,7 @@ const Create = () => {
                       placeholder="Enter your title..."
                       value={formik.values.Title}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur} 
+                      onBlur={formik.handleBlur}
                     />
                     {formik.errors.Title && formik.touched.Title && (
                       <small className="text-danger">
@@ -144,10 +141,30 @@ const Create = () => {
                       </small>
                     )}
                   </div>
+
+                  <div className="form-group">
+                    <label>Description</label>
+                    <textarea
+                      name="Description"
+                      className="form-control"
+                      rows="5"
+                      placeholder="Enter your description..."
+                      value={formik.values.Description}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    ></textarea>
+                    {formik.errors.Description &&
+                      formik.touched.Description && (
+                        <small className="text-danger">
+                          {formik.errors.Description}
+                        </small>
+                      )}
+                  </div>
+
                   <button type="submit" className="btn btn-primary">
                     Create
                   </button>
-                  <Link to={"/admin/banner"} className="btn btn-danger ml-2">
+                  <Link to={"/admin/blog"} className="btn btn-danger ml-2">
                     Back
                   </Link>
                 </form>

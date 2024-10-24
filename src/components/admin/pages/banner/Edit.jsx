@@ -9,6 +9,7 @@ const Edit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [banner, setBanner] = useState({});
+  const [imgPreview, setImgPreview] = useState();
 
   const fetchBanner = async () => {
     const result = await bannerService.findById(id);
@@ -24,24 +25,21 @@ const Edit = () => {
       Title: "",
       ImageFile: null,
     },
-    validationSchema: Yup.object({
-      Title: Yup.string()
-        .required("Không được để trống")
-        .min(2, "Tối thiểu 2 ký tự"),
-    }),
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("Title", values.Title);
-      if (values.ImageFile) {
+      formData.append("Title", values.Title ?? banner.title);
+      if (values.ImageFile && values.ImageFile != null) {
         formData.append("ImageFile", values.ImageFile);
+      } else {
+        formData.append("OldImage", banner.image);
       }
 
-      const [result, error] = await bannerService.update(id, formData); // Gọi API để cập nhật banner
+      const [result, error] = await bannerService.update(id, formData);
       if (result) {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Cập nhật thành công",
+          title: "Updated successfully",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -51,7 +49,7 @@ const Edit = () => {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: "Cập nhật thất bại",
+          title: "Failed to update!",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -63,11 +61,11 @@ const Edit = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setImgPreview(event.target.files[0]);
       formik.setFieldValue("ImageFile", file);
     }
   };
 
-  // Nếu banner chưa được tải, có thể hiển thị loading
   if (!banner) {
     return <div>Loading...</div>;
   }
@@ -79,7 +77,6 @@ const Edit = () => {
     });
   }
 
-  // Hiển thị banner đã lấy được
   return (
     <div id="content-page" className="content-page">
       <div className="container-fluid">
@@ -88,7 +85,7 @@ const Edit = () => {
             <div className="iq-card">
               <div className="iq-card-header d-flex justify-content-between">
                 <div className="iq-header-title">
-                  <h4 className="card-title">Chỉnh sửa banner</h4>
+                  <h4 className="card-title">Update Banner</h4>
                 </div>
               </div>
               <div className="iq-card-body">
@@ -98,9 +95,37 @@ const Edit = () => {
                 >
                   <div className="form-group">
                     <label htmlFor="image" className="col-md-3 col-form-label">
-                      Hình ảnh
+                      Image
                     </label>
                     <div className="col-md-9 col-xl-8">
+                      {imgPreview && imgPreview ? (
+                        <img
+                          style={{
+                            height: "200px",
+                            width: "200px",
+                            cursor: "pointer",
+                          }}
+                          class="thumbnail rounded-circle"
+                          data-toggle="tooltip"
+                          title="Click to change the image"
+                          data-placement="bottom"
+                          src={URL.createObjectURL(imgPreview)}
+                        />
+                      ) : (
+                        <img
+                          style={{
+                            height: "200px",
+                            width: "200px",
+                            cursor: "pointer",
+                          }}
+                          class="thumbnail rounded-circle"
+                          data-toggle="tooltip"
+                          title="Click to change the image"
+                          data-placement="bottom"
+                          src={banner.image}
+                        />
+                      )}
+
                       <input
                         type="file"
                         name="fileUpload"
@@ -117,13 +142,13 @@ const Edit = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Tiêu đề banner:</label>
+                    <label>Title</label>
                     <input
                       type="text"
                       name="Title"
                       className="form-control"
-                      placeholder="Nhập tên danh mục tại đây..."
-                      value={formik.values.Title}
+                      placeholder="Enter your title..."
+                      value={formik.values.Title || banner.title}
                       onChange={formik.handleChange}
                     />
                     {formik.errors.Title && formik.touched.Title && (
@@ -133,25 +158,11 @@ const Edit = () => {
                     )}
                   </div>
 
-                  {/* Hiển thị hình ảnh hiện tại */}
-                  {banner.Image && (
-                    <div className="form-group">
-                      <label>Hình ảnh hiện tại:</label>
-                      <div>
-                        <img
-                          src={banner.Image}
-                          alt="Banner"
-                          style={{ width: "100%", height: "auto" }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
                   <button type="submit" className="btn btn-primary">
-                    Cập nhật
+                    Update
                   </button>
                   <Link to={"/admin/banner"} className="btn btn-danger ml-2">
-                    Trở lại
+                    Back
                   </Link>
                 </form>
               </div>

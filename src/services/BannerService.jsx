@@ -28,7 +28,6 @@ export const search = async (name, sort, page) => {
     if (page != 1) params.append("page", page);
 
     const queryString = params.toString() ? `?${params}` : "";
-    console.log(`${URLAPI}/banner${queryString}`)
     const res = await http.get(`${URLAPI}/banner${queryString}`);
     return [res, null];
   } catch (error) {

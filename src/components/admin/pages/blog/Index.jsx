@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import * as bannerService from "../../../../services/BannerService";
+import * as blogService from "../../../../services/BlogService";
 import Swal from "sweetalert2";
 
 const Index = () => {
@@ -11,7 +11,7 @@ const Index = () => {
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await bannerService.findAll();
+    const [res, err] = await blogService.findAll();
     if (res) {
       setApiData(res.data.data);
       if (res.data.length > 0) setTotalPages(res.data.totalPages);
@@ -27,7 +27,7 @@ const Index = () => {
     const sort = formData.get("sort") || "Id-DESC";
     const page = formData.get("page") || 1;
 
-    const [res, err] = await bannerService.search(name, sort, page);
+    const [res, err] = await blogService.search(name, sort, page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -39,7 +39,7 @@ const Index = () => {
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await bannerService.search(null, "Id-DESC", page);
+    const [res, err] = await blogService.search(null, "Id-DESC", page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -66,7 +66,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await bannerService.remove(id);
+      const [res, err] = await blogService.remove(id);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -189,11 +189,11 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Banner</h4>
+                  <h4 class="card-title">List Blog</h4>
                 </div>
                 <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <Link to={"/admin/banner/create"} className="btn btn-primary">
-                    Add Banner
+                  <Link to={"/admin/blog/create"} className="btn btn-primary">
+                    Add Blog
                   </Link>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const Index = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Search by name banner..."
+                        placeholder="Search by name blog..."
                         name="name"
                       />
                     </div>
@@ -217,18 +217,14 @@ const Index = () => {
                     <div class="col-3 p-0">
                       <div class="d-flex">
                         <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Order By -----</option>
-                          <option value="Id-ASC">
-                            Sorting By Id (a - z)
+                          <option value="">----- Order by -----</option>
+                          <option value="Id-ASC">Sorting By Id (a - z)</option>
+                          <option value="Id-DESC">Sorting By Id (z - a)</option>
+                          <option value="Name-ASC">
+                            Sorting By Name (a - z)
                           </option>
-                          <option value="Id-DESC">
-                            Sorting By Id (z - a)
-                          </option>
-                          <option value="Date-ASC">
-                            Sorting By Date (a - z)
-                          </option>
-                          <option value="Date-DESC">
-                            Sorting By Date (z - a)
+                          <option value="Name-DESC">
+                            Sorting By Name (z - a)
                           </option>
                         </select>
                       </div>
@@ -257,10 +253,11 @@ const Index = () => {
                       <tr>
                         <th width="5%">#</th>
                         <th width="5%">Image</th>
-                        <th>Title</th>
+                        <th>Name</th>
+                        <th width="20%">Slug</th>
                         <th width="18%">Create Date</th>
                         <th width="18%">Update Date</th>
-                        <th width="10%">Action</th>
+                        <th width="15%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -268,17 +265,18 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.bannerId}>
-                                <td>{item.bannerId}</td>
+                              <tr key={item.blogId}>
+                                <td>{item.blogId}</td>
                                 <td>
                                   <img
                                     className="card-img"
                                     style={{ width: "120px" }}
-                                    src={item.image}
-                                    alt={item.title}
+                                    src={item.blogImage}
+                                    alt={item.blogTitle}
                                   />
                                 </td>
-                                <td>{item.title}</td>
+                                <td>{item.blogTitle}</td>
+                                <td>{item.blogSlug}</td>
                                 <td>
                                   {new Date(item.createDate).toLocaleString()}
                                 </td>
@@ -288,7 +286,22 @@ const Index = () => {
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <Link
-                                      to={`/admin/banner/edit/${item.bannerId}`}
+                                      to={`/admin/blog/comment/${item.blogId}`}
+                                      className="bg-warning"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="comment"
+                                      onMouseEnter={(e) =>
+                                        (e.currentTarget.style.color = "white")
+                                      }
+                                      onMouseLeave={(e) =>
+                                        (e.currentTarget.style.color = "white")
+                                      }
+                                    >
+                                      <i className="ri-eye-line"></i>
+                                    </Link>
+                                    <Link
+                                      to={`/admin/blog/edit/${item.blogId}`}
                                       className="bg-primary"
                                       data-toggle="tooltip"
                                       data-placement="top"
@@ -302,9 +315,7 @@ const Index = () => {
                                       data-placement="top"
                                       title="Delete"
                                       data-original-title="Delete"
-                                      onClick={() =>
-                                        handleDelete(item.bannerId)
-                                      }
+                                      onClick={() => handleDelete(item.blogId)}
                                       style={{
                                         fontSize: "16px",
                                         width: "25px",
@@ -330,7 +341,7 @@ const Index = () => {
                       <tbody>
                         <tr>
                           <td
-                            colSpan={6}
+                            colSpan={7}
                             style={{
                               height: "350px",
                               background: "rgb(241 241 241)",
