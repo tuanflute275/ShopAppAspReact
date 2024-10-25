@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import * as blogService from "../../../../services/BlogService";
-import * as blogCommentService from "../../../../services/BlogCommentService";
+import * as productCommentService from "../../../../services/ProductCommentService";
 import Swal from "sweetalert2";
 
-const Index = () => {
+const Comments = () => {
   const { id } = useParams();
   const formRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,7 +12,7 @@ const Index = () => {
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await blogCommentService.findById(id);
+    const [res, err] = await productCommentService.findById(id);
     if (res) {
       console.log(res.data.data);
       setApiData(res.data.data);
@@ -30,8 +29,11 @@ const Index = () => {
     const sort = formData.get("sort") || "Id-DESC";
     const page = formData.get("page") || 1;
 
-    const [res, err] = await blogCommentService.search(id,name, sort, page);
+    console.log(id, name, sort, page);
+
+    const [res, err] = await productCommentService.search(id, name, sort, page);
     if (res) {
+      console.log(res.data);
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
     } else {
@@ -42,7 +44,12 @@ const Index = () => {
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await blogService.search(null, "Id-DESC", page);
+    const [res, err] = await productCommentService.search(
+      id,
+      null,
+      "Id-DESC",
+      page
+    );
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -69,7 +76,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await blogCommentService.remove(id);
+      const [res, err] = await productCommentService.remove(id);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -192,7 +199,7 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Blog Comment</h4>
+                  <h4 class="card-title">List Product Comment</h4>
                 </div>
               </div>
 
@@ -245,7 +252,7 @@ const Index = () => {
                         Reset
                       </button>
                       <Link
-                        to={"/admin/blog"}
+                        to={"/admin/product"}
                         class="btn rounded-0 btn-warning text-white"
                       >
                         Back
@@ -261,13 +268,13 @@ const Index = () => {
                   >
                     <thead>
                       <tr>
-                        <th width="5%">#blog</th>
+                        <th width="3%">#product</th>
                         <th width="15%">Email</th>
                         <th width="10%">Name</th>
                         <th width="20%">Message</th>
-                        <th width="10%">Create Date</th>
-                        <th width="10%">Update Date</th>
-                        <th width="5%">Action</th>
+                        <th width="15%">Create Date</th>
+                        <th width="15%">Update Date</th>
+                        <th width="2%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -275,8 +282,8 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.blogId}>
-                                <td>{item.blogId}</td>
+                              <tr key={item.productId}>
+                                <td>{item.productId}</td>
                                 <td>{item.email}</td>
                                 <td>{item.name}</td>
                                 <td>{item.message}</td>
@@ -295,7 +302,7 @@ const Index = () => {
                                       title="Delete"
                                       data-original-title="Delete"
                                       onClick={() =>
-                                        handleDelete(item.blogCommentId)
+                                        handleDelete(item.productCommentId)
                                       }
                                       style={{
                                         fontSize: "16px",
@@ -409,4 +416,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Comments;

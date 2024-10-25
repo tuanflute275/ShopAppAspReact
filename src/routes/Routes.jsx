@@ -19,11 +19,12 @@ import NotifyEdit from "../components/admin/pages/notify/Edit";
 import BlogIndex from "../components/admin/pages/blog/Index";
 import BlogCreate from "../components/admin/pages/blog/Create";
 import BlogEdit from "../components/admin/pages/blog/Edit";
-import BlogComment from "../components/admin/pages/blog/Comment";
+import BlogComment from "../components/admin/pages/blog/BlogComment";
 
 import ProductIndex from "../components/admin/pages/product/Index";
 import ProductCreate from "../components/admin/pages/product/Create";
 import ProductEdit from "../components/admin/pages/product/Edit";
+import ProductComment from "../components/admin/pages/product/Comments";
 
 import AccountIndex from "../components/admin/pages/account/Index";
 import AccountCreate from "../components/admin/pages/account/Create";
@@ -119,6 +120,11 @@ export const adminRoutes = [
     path: "admin/product/edit/:id",
     element: <AdminMasterLayout child={<ProductEdit />} />,
   },
+  {
+    path: "admin/product/comment/:id",
+    element: <AdminMasterLayout child={<ProductComment />} />,
+  },
+
   {
     path: "admin/account",
     element: <AdminMasterLayout child={<AccountIndex />} />,

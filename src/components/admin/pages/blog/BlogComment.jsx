@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import * as productService from "../../../../services/ProductService";
+import { Link, useParams } from "react-router-dom";
+import * as blogCommentService from "../../../../services/BlogCommentService";
 import Swal from "sweetalert2";
 
-const Index = () => {
+const BlogComment = () => {
+  const { id } = useParams();
   const formRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -11,8 +12,9 @@ const Index = () => {
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await productService.findAll();
+    const [res, err] = await blogCommentService.findById(id);
     if (res) {
+      console.log(res.data.data);
       setApiData(res.data.data);
       if (res.data.length > 0) setTotalPages(res.data.totalPages);
     } else {
@@ -27,7 +29,7 @@ const Index = () => {
     const sort = formData.get("sort") || "Id-DESC";
     const page = formData.get("page") || 1;
 
-    const [res, err] = await productService.search(name, sort, page);
+    const [res, err] = await blogCommentService.search(id, name, sort, page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -39,7 +41,12 @@ const Index = () => {
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await productService.search(null, "Id-DESC", page);
+    const [res, err] = await blogCommentService.search(
+      id,
+      null,
+      "Id-DESC",
+      page
+    );
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
@@ -66,7 +73,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await productService.remove(id);
+      const [res, err] = await blogCommentService.remove(id);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -189,15 +196,7 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Product</h4>
-                </div>
-                <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <Link
-                    to={"/admin/product/create"}
-                    className="btn btn-primary"
-                  >
-                    Add Product
-                  </Link>
+                  <h4 class="card-title">List Blog Comment</h4>
                 </div>
               </div>
 
@@ -212,7 +211,7 @@ const Index = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Search by name product..."
+                        placeholder="Search by name, email..."
                         name="name"
                       />
                     </div>
@@ -229,11 +228,11 @@ const Index = () => {
                           <option value="Name-DESC">
                             Sorting By Name (z - a)
                           </option>
-                          <option value="Price-ASC">
-                            Sorting By Price (a - z)
+                          <option value="Date-ASC">
+                            Sorting By Date (a - z)
                           </option>
-                          <option value="Price-DESC">
-                            Sorting By Price (z - a)
+                          <option value="Date-DESC">
+                            Sorting By Date (z - a)
                           </option>
                         </select>
                       </div>
@@ -249,6 +248,12 @@ const Index = () => {
                       >
                         Reset
                       </button>
+                      <Link
+                        to={"/admin/blog"}
+                        class="btn rounded-0 btn-warning text-white"
+                      >
+                        Back
+                      </Link>
                     </div>
                   </div>
                 </form>
@@ -260,15 +265,13 @@ const Index = () => {
                   >
                     <thead>
                       <tr>
-                        <th width="5%">#</th>
-                        <th width="8%">Image</th>
-                        <th>Name</th>
-                        <th>Slug</th>
-                        <th width="10%">Price</th>
-                        <th width="10%">Sale Price</th>
-                        <th width="9%">Category</th>
-                        <th width="8%">Status</th>
-                        <th width="10%">Action</th>
+                        <th width="5%">#blog</th>
+                        <th width="15%">Email</th>
+                        <th width="10%">Name</th>
+                        <th width="20%">Message</th>
+                        <th width="10%">Create Date</th>
+                        <th width="10%">Update Date</th>
+                        <th width="5%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -276,137 +279,19 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.productId}>
-                                <td>{item.productId}</td>
+                              <tr key={item.blogId}>
+                                <td>{item.blogId}</td>
+                                <td>{item.email}</td>
+                                <td>{item.name}</td>
+                                <td>{item.message}</td>
                                 <td>
-                                  <img
-                                    className="card-img"
-                                    style={{ width: "120px" }}
-                                    src={item.productImage}
-                                    alt={item.productName}
-                                  />
-                                </td>
-                                <td>{item.productName}</td>
-                                <td>{item.productSlug}</td>
-                                <td>
-                                  {item.productPrice.toLocaleString("en-US", {
-                                    style: "currency",
-                                    currency: "USD",
-                                    minimumFractionDigits: 0,
-                                    maximumFractionDigits: 0,
-                                  })}
+                                  {new Date(item.createDate).toLocaleString()}
                                 </td>
                                 <td>
-                                  {item.productSalePrice.toLocaleString(
-                                    "en-US",
-                                    {
-                                      style: "currency",
-                                      currency: "USD",
-                                      minimumFractionDigits: 0,
-                                      maximumFractionDigits: 0,
-                                    }
-                                  )}
-                                </td>
-                                <td>{item.category.categoryName}</td>
-                                <td>
-                                  {item.productStatus ? "Active" : "InActive"}
+                                  {new Date(item.updateDate).toLocaleString()}
                                 </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
-                                    <Link
-                                      to={`/admin/product/comment/${item.productId}`}
-                                      className="bg-info"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="View Comments"
-                                      onMouseEnter={(e) => {
-                                        e.currentTarget.style.color = "white";
-                                        e.currentTarget.style.backgroundColor =
-                                          "#d592ff";
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        e.currentTarget.style.color = "white";
-                                        e.currentTarget.style.backgroundColor =
-                                          "";
-                                      }}
-                                      style={{
-                                        fontSize: "16px",
-                                        width: "25px",
-                                        height: "25px",
-                                        textAlign: "center",
-                                        lineHeight: "20px",
-                                        margin: "0px 3px",
-                                        borderRadius: "5px",
-                                        display: "inline-block",
-                                        border: "none",
-                                        transition: "0.3s ease",
-                                      }}
-                                    >
-                                      <i className="ri-chat-3-line"></i>
-                                    </Link>
-                                    <Link
-                                      to={`/admin/product/attribute/${item.productId}`}
-                                      className="bg-secondary"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="View Attributes"
-                                      onMouseEnter={(e) =>
-                                        (e.currentTarget.style.color = "white")
-                                      }
-                                      onMouseLeave={(e) =>
-                                        (e.currentTarget.style.color = "white")
-                                      }
-                                      style={{
-                                        fontSize: "16px",
-                                        width: "25px",
-                                        height: "25px",
-                                        textAlign: "center",
-                                        lineHeight: "20px",
-                                        margin: "0px 3px",
-                                        borderRadius: "5px",
-                                        display: "inline-block",
-                                        border: "none",
-                                        transition: "0.3s ease",
-                                      }}
-                                    >
-                                      <i className="ri-information-line"></i>
-                                    </Link>
-                                    <Link
-                                      to={`/admin/product/image/${item.productId}`}
-                                      className="bg-warning"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="View Images"
-                                      onMouseEnter={(e) =>
-                                        (e.currentTarget.style.color = "white")
-                                      }
-                                      onMouseLeave={(e) =>
-                                        (e.currentTarget.style.color = "white")
-                                      }
-                                      style={{
-                                        fontSize: "16px",
-                                        width: "25px",
-                                        height: "25px",
-                                        textAlign: "center",
-                                        lineHeight: "20px",
-                                        margin: "0px 3px",
-                                        borderRadius: "5px",
-                                        display: "inline-block",
-                                        border: "none",
-                                        transition: "0.3s ease",
-                                      }}
-                                    >
-                                      <i className="ri-image-line"></i>
-                                    </Link>
-                                    <Link
-                                      to={`/admin/product/edit/${item.productId}`}
-                                      className="bg-primary"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="Edit"
-                                    >
-                                      <i className="ri-pencil-line"></i>
-                                    </Link>
                                     <button
                                       className="bg-danger"
                                       data-toggle="tooltip"
@@ -414,7 +299,7 @@ const Index = () => {
                                       title="Delete"
                                       data-original-title="Delete"
                                       onClick={() =>
-                                        handleDelete(item.productId)
+                                        handleDelete(item.blogCommentId)
                                       }
                                       style={{
                                         fontSize: "16px",
@@ -441,7 +326,7 @@ const Index = () => {
                       <tbody>
                         <tr>
                           <td
-                            colSpan={9}
+                            colSpan={7}
                             style={{
                               height: "350px",
                               background: "rgb(241 241 241)",
@@ -528,4 +413,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default BlogComment;
