@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as productService from "../../../../services/ProductService";
-import * as categoryService from "../../../../services/CategoryService";
+import * as roleService from "../../../../services/RoleService";
+import * as accountService from "../../../../services/AccountService";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,89 +9,93 @@ import * as Yup from "yup";
 const Edit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [data, setData] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [role, setRole] = useState([]);
   const [imgPreview, setImgPreview] = useState();
+  const [account, setAccount] = useState([]);
+  const [initialValues, setInitialValues] = useState({
+    userName: "",
+    userFullName: "",
+    ImageFile: null,
+    userEmail: "",
+    userPassword: "",
+    userPhoneNumber: "",
+    userAddress: "",
+    userGender: true,
+    userActive: true,
+  });
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const [res, err] = await categoryService.findAll();
+    const fetchRoles = async () => {
+      const [res, err] = await roleService.findAll();
       if (res) {
-        setCategory(res.data.data);
+        setRole(res.data.data);
       } else {
         console.log(err);
       }
     };
 
-    const fetchProduct = async () => {
-      const [res, err] = await productService.findById(id);
-      if (res) {
-        setData(res.data);
-        setImgPreview(res.data.productImage || "");
-      } else {
-        console.log(err);
+    const fetchAccount = async () => {
+      const [result, error] = await accountService.findById(id);
+      if (result) {
+        setAccount(result.data);
+        const account = result.data;
+        setInitialValues({
+          userName: account.userName,
+          userFullName: account.userFullName,
+          ImageFile: null,
+          userEmail: account.userEmail,
+          userPassword: "",
+          userPhoneNumber: account.userPhoneNumber,
+          userAddress: account.userAddress,
+          userGender: account.userGender,
+          userActive: account.userActive,
+        });
+      }
+      if (error) {
+        console.log(error);
       }
     };
 
-    fetchCategories();
-    fetchProduct();
+    fetchRoles();
+    fetchAccount();
   }, [id]);
 
   const formik = useFormik({
-    initialValues: {
-      Name: "",
-      ImageFile: null,
-      Price: 0,
-      SalePrice: 0,
-      Category: 0,
-      Status: "",
-      Description: "",
-    },
+    enableReinitialize: true,
+    initialValues: initialValues,
     validationSchema: Yup.object({
-      Price: Yup.number()
-        .required("Price is required")
-        .min(0, "Price must be greater than or equal to 0"),
-      SalePrice: Yup.number().min(
-        0,
-        "Sale price must be greater than or equal to 0"
-      ),
-      Category: Yup.number().required("Category is required"),
+      userName: Yup.string()
+        .required("User Name is required")
+        .min(2, "Name must be at least 2 characters"),
+      userFullName: Yup.string().required("Full Name is required"),
+      userEmail: Yup.string()
+        .required("Email is required")
+        .email("Please enter a valid email"),
+      userPassword: Yup.string(),
+      userPhoneNumber: Yup.string()
+        .required("Phone is required")
+        .matches(
+          /^0[0-9]{9}$/,
+          "Phone number must start with 0 and be exactly 10 digits"
+        ),
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
-
-      formData.append("ProductName", values.Name || data.productName);
-      formData.append(
-        "ProductPrice",
-        values.Price > 0 ? values.Price : data.productPrice
-      );
-      formData.append(
-        "ProductSalePrice",
-        values.SalePrice > 0 ? values.SalePrice : data.productSalePrice
-      );
-      formData.append(
-        "ProductStatus",
-        values.Status != ""
-          ? values.Status === "true"
-            ? true
-            : false
-          : data.productStatus
-      );
-      formData.append(
-        "CategoryId",
-        Number(values.Category) > 0 ? Number(values.Category) : data.categoryId
-      );
-      formData.append(
-        "ProductDescription",
-        values.Description || data.productDescription
-      );
+      formData.append("UserName", values.userName);
+      formData.append("UserFullName", values.userFullName);
+      formData.append("UserEmail", values.userEmail);
+      formData.append("UserPassword", values.userPassword);
+      formData.append("UserPhoneNumber", values.userPhoneNumber);
+      formData.append("UserAddress", values.userAddress);
+      formData.append("UserGender", values.userGender);
+      formData.append("UserActive", values.userActive);
       if (values.ImageFile && values.ImageFile != null) {
         formData.append("ImageFile", values.ImageFile);
       } else {
-        formData.append("OldImage", data.productImage);
+        formData.append("OldImage", account.userAvatar);
       }
 
-      const [result, error] = await productService.update(id, formData);
+      const [result, error] = await accountService.update(id, formData); // Cập nhật thay vì tạo mới
       if (result) {
         Swal.fire({
           position: "top-end",
@@ -100,7 +104,7 @@ const Edit = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-        navigate("/admin/product");
+        navigate("/admin/account");
       }
       if (error) {
         Swal.fire({
@@ -118,7 +122,7 @@ const Edit = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImgPreview(URL.createObjectURL(file));
+      setImgPreview(file);
       formik.setFieldValue("ImageFile", file);
     }
   };
@@ -135,7 +139,7 @@ const Edit = () => {
             <div className="iq-card">
               <div className="iq-card-header d-flex justify-content-between">
                 <div className="iq-header-title">
-                  <h4 className="card-title">Update Product</h4>
+                  <h4 className="card-title">Update Account</h4>
                 </div>
               </div>
               <div className="iq-card-body">
@@ -158,7 +162,11 @@ const Edit = () => {
                         data-toggle="tooltip"
                         title="Click to change the image"
                         data-placement="bottom"
-                        src={imgPreview ? imgPreview : "/add-image-icon.jpg"}
+                        src={
+                          imgPreview
+                            ? URL.createObjectURL(imgPreview)
+                            : account.userAvatar
+                        }
                       />
                       <input
                         type="file"
@@ -176,134 +184,150 @@ const Edit = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Name</label>
+                    <label>User Name</label>
                     <input
                       type="text"
-                      name="Name"
+                      name="userName"
                       className="form-control"
-                      placeholder="Enter your name..."
-                      value={formik.values.Name || data.productName}
+                      placeholder="Enter your User Name..."
+                      value={formik.values.userName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.Name && formik.touched.Name && (
+                    {formik.errors.userName && formik.touched.userName && (
                       <small className="text-danger">
-                        {formik.errors.Name}
+                        {formik.errors.userName}
                       </small>
                     )}
                   </div>
 
                   <div className="form-group">
-                    <label>Price</label>
+                    <label>User Full Name</label>
                     <input
-                      type="number"
-                      min={0}
-                      name="Price"
+                      type="text"
+                      name="userFullName"
                       className="form-control"
-                      placeholder="Enter your price..."
-                      value={formik.values.Price || data.productPrice}
+                      placeholder="Enter your Full Name..."
+                      value={formik.values.userFullName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.Price && formik.touched.Price && (
-                      <small className="text-danger">
-                        {formik.errors.Price}
-                      </small>
-                    )}
+                    {formik.errors.userFullName &&
+                      formik.touched.userFullName && (
+                        <small className="text-danger">
+                          {formik.errors.userFullName}
+                        </small>
+                      )}
                   </div>
 
                   <div className="form-group">
-                    <label>Sale Price</label>
+                    <label>User Email</label>
                     <input
-                      min={0}
-                      type="number"
-                      name="SalePrice"
+                      type="text"
+                      name="userEmail"
                       className="form-control"
-                      placeholder="Enter your sale price..."
-                      value={formik.values.SalePrice || data.productSalePrice}
+                      placeholder="Enter your Email..."
+                      value={formik.values.userEmail}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.SalePrice && formik.touched.SalePrice && (
+                    {formik.errors.userEmail && formik.touched.userEmail && (
                       <small className="text-danger">
-                        {formik.errors.SalePrice}
+                        {formik.errors.userEmail}
                       </small>
                     )}
                   </div>
 
                   <div className="form-group">
-                    <label>Category</label>
+                    <label>User Password</label>
+                    <input
+                      type="password"
+                      name="userPassword"
+                      className="form-control"
+                      placeholder="Enter your Password..."
+                      value={formik.values.userPassword}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.userPassword &&
+                      formik.touched.userPassword && (
+                        <small className="text-danger">
+                          {formik.errors.userPassword}
+                        </small>
+                      )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>User Phone</label>
+                    <input
+                      type="text"
+                      name="userPhoneNumber"
+                      className="form-control"
+                      placeholder="Enter your Phone Number..."
+                      value={formik.values.userPhoneNumber}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.userPhoneNumber &&
+                      formik.touched.userPhoneNumber && (
+                        <small className="text-danger">
+                          {formik.errors.userPhoneNumber}
+                        </small>
+                      )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>User Address</label>
+                    <input
+                      type="text"
+                      name="userAddress"
+                      className="form-control"
+                      placeholder="Enter your Address..."
+                      value={formik.values.userAddress}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.userAddress &&
+                      formik.touched.userAddress && (
+                        <small className="text-danger">
+                          {formik.errors.userAddress}
+                        </small>
+                      )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>Gender</label>
                     <select
-                      name="Category"
+                      name="userGender"
                       className="form-control"
-                      value={formik.values.Category || data.categoryId}
+                      value={formik.values.userGender}
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     >
-                      <option value="">Select a category...</option>
-                      {category &&
-                        category.length > 0 &&
-                        category.map((item) => (
-                          <option
-                            key={item.categoryId}
-                            value={item.categoryId}
-                            selected={
-                              item.categoryId ===
-                              (formik.values.Category || data.categoryId)
-                            }
-                          >
-                            {item.categoryName}
-                          </option>
-                        ))}
+                      <option value={true}>Male</option>
+                      <option value={false}>Female</option>
                     </select>
-                    {formik.errors.Category && formik.touched.Category && (
-                      <small className="text-danger">
-                        {formik.errors.Category}
-                      </small>
-                    )}
                   </div>
 
                   <div className="form-group">
                     <label>Status</label>
                     <select
-                      name="Status"
+                      name="userActive"
                       className="form-control"
-                      value={
-                        formik.values.Status != ""
-                          ? formik.values.Status === true ||
-                            formik.values.Status === "true"
-                            ? "true"
-                            : "false"
-                          : data.productStatus === true
-                          ? "true"
-                          : "false"
-                      }
+                      value={formik.values.userActive}
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                     >
-                      <option value="true">Active</option>
-                      <option value="false">Inactive</option>
+                      <option value={true}>Active</option>
+                      <option value={false}>Inactive</option>
                     </select>
                   </div>
 
-                  <div className="form-group">
-                    <label>Description</label>
-                    <textarea
-                      name="Description"
-                      className="form-control"
-                      rows="3"
-                      placeholder="Enter your description..."
-                      value={
-                        formik.values.Description || data.productDescription
-                      }
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    ></textarea>
-                  </div>
-
-                  <button type="submit" className="btn btn-primary mx-2">
+                  <button type="submit" className="btn btn-primary">
                     Update
                   </button>
-                  <Link to="/admin/product" className="btn btn-danger mx-2">
-                    Cancel
+                  <Link to={"/admin/account"} className="btn btn-danger ml-2">
+                    Back
                   </Link>
                 </form>
               </div>

@@ -255,10 +255,10 @@ const Index = () => {
                     <thead>
                       <tr>
                         <th width="5%">#</th>
-                        <th width="6%">Image</th>
-                        <th>Username</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
+                        <th width="5%">Image</th>
+                        <th width="5%">Username</th>
+                        <th width="5%">Full Name</th>
+                        <th width="8%">Email</th>
                         <th width="11%">Phone</th>
                         <th width="10%">Address</th>
                         <th width="10%">Role</th>
@@ -287,9 +287,15 @@ const Index = () => {
                                 <td>{item.userEmail}</td>
                                 <td>{item.userPhoneNumber}</td>
                                 <td>{item.userAddress}</td>
-                                <td>{item.roleNames.length > 0 ? item.roleNames.join(", ") : "No roles assigned"}</td>
+                                <td>
+                                  {item.roleNames.length > 0
+                                    ? item.roleNames.join(", ")
+                                    : "No roles assigned"}
+                                </td>
                                 <td>{item.userGender ? "Male" : "Female"}</td>
-                                <td>{item.userActive ? "Active" : "InActive"}</td>
+                                <td>
+                                  {item.userActive ? "Active" : "InActive"}
+                                </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <Link
