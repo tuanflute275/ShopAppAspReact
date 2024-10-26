@@ -14,9 +14,8 @@ const Comments = () => {
   const fetchApiData = async () => {
     const [res, err] = await productCommentService.findById(id);
     if (res) {
-      console.log(res.data.data);
       setApiData(res.data.data);
-      if (res.data.length > 0) setTotalPages(res.data.totalPages);
+      if (res.data) setTotalPages(res.data.totalPages);
     } else {
       console.log(err);
     }
@@ -33,7 +32,6 @@ const Comments = () => {
 
     const [res, err] = await productCommentService.search(id, name, sort, page);
     if (res) {
-      console.log(res.data);
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
     } else {

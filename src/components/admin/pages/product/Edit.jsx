@@ -15,9 +15,9 @@ const Edit = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const [res, err] = await categoryService.findAll();
+      const [res, err] = await categoryService.findListAll();
       if (res) {
-        setCategory(res.data.data);
+        setCategory(res.data);
       } else {
         console.log(err);
       }

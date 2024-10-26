@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const AddCategory = () => {
+const Create = () => {
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -120,4 +120,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default Create;

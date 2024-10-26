@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import * as accountService from "../../../../services/AccountService";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import * as productImageService from "../../../../services/ProductImageService";
 import Swal from "sweetalert2";
 
 const Index = () => {
-  const formRef = useRef(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [apiData, setApiData] = useState([]);
   const [deleteState, setDeleteState] = useState(false);
 
   const fetchApiData = async () => {
-    const [res, err] = await accountService.findAll();
+    const [res, err] = await productImageService.findById(id);
     if (res) {
       setApiData(res.data.data);
       if (res.data) setTotalPages(res.data.totalPages);
@@ -20,38 +21,20 @@ const Index = () => {
     }
   };
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const name = formData.get("name") || null;
-    const sort = formData.get("sort") || "Id-DESC";
-    const page = formData.get("page") || 1;
-
-    const [res, err] = await accountService.search(name, sort, page);
-    if (res) {
-      setApiData(res.data.data);
-      setTotalPages(res.data.totalPages);
-    } else {
-      console.log(err);
-    }
+  const handleAddBtn = () => {
+    navigate(`/admin/product/image/create/${id}`);
   };
 
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    const [res, err] = await accountService.search(null, "Id-DESC", page);
+    const [res, err] = await productImageService.search(id, page);
     if (res) {
       setApiData(res.data.data);
       setTotalPages(res.data.totalPages);
     } else {
       console.log(err);
     }
-  };
-
-  const handleReset = () => {
-    formRef.current.reset();
-    setCurrentPage(1);
-    fetchApiData();
   };
 
   const handleDelete = async (id) => {
@@ -66,7 +49,7 @@ const Index = () => {
     });
 
     if (result.isConfirmed) {
-      const [res, err] = await accountService.remove(id);
+      const [res, err] = await productImageService.remove(id);
       if (res) {
         setDeleteState(!deleteState);
         Swal.fire({
@@ -189,82 +172,39 @@ const Index = () => {
             <div class="iq-card">
               <div class="iq-card-header d-flex justify-content-between">
                 <div class="iq-header-title">
-                  <h4 class="card-title">List Account</h4>
+                  <h4 class="card-title">List Image </h4>
                 </div>
                 <div class="iq-card-header-toolbar d-flex align-items-center">
-                  <Link
-                    to={"/admin/account/create"}
-                    className="btn btn-primary"
-                  >
-                    Add Account
-                  </Link>
+                  <button onClick={handleAddBtn} className="btn btn-primary">
+                    Add Image
+                  </button>
                 </div>
               </div>
 
               <div class="iq-card-body">
-                <form
-                  method="GET"
-                  ref={formRef}
-                  onSubmit={(e) => handleSearch(e)}
+                <div class="d-flex justify-content-end">
+                  <Link
+                    to={"/admin/product"}
+                    class="btn rounded-0 btn-warning text-white"
+                  >
+                    Back
+                  </Link>
+                </div>
+                <div
+                  class="table-responsive table-container"
+                  style={{ height: "435px", maxHeight: "435px" }}
                 >
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="col-3 p-0">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search by name, email..."
-                        name="name"
-                      />
-                    </div>
-
-                    <div class="col-3 p-0">
-                      <div class="d-flex">
-                        <select class="form-control rounded-0 " name="sort">
-                          <option value="">----- Order by -----</option>
-                          <option value="Id-ASC">Sorting By Id (a - z)</option>
-                          <option value="Id-DESC">Sorting By Id (z - a)</option>
-                          <option value="Name-ASC">
-                            Sorting By Name (a - z)
-                          </option>
-                          <option value="Name-DESC">
-                            Sorting By Name (z - a)
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-3 text-right p-0 m-0">
-                      <button type="submit" class="btn rounded-0 btn-primary">
-                        Search
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleReset}
-                        class="btn rounded-0 btn-danger text-white"
-                      >
-                        Reset
-                      </button>
-                    </div>
-                  </div>
-                </form>
-
-                <div class="table-responsive table-container">
                   <table
                     class="data-tables table table-striped table-bordered"
                     style={{ width: "100%" }}
                   >
                     <thead>
                       <tr>
-                        <th width="5%">#</th>
-                        <th width="5%">Image</th>
-                        <th width="5%">Username</th>
-                        <th width="5%">Full Name</th>
-                        <th width="8%">Email</th>
-                        <th width="11%">Phone</th>
-                        <th width="10%">Address</th>
-                        <th width="10%">Role</th>
-                        <th width="5%">Gender</th>
-                        <th width="10%">Status</th>
-                        <th width="12%">Action</th>
+                        <th width="5%">#product</th>
+                        <th>Image</th>
+                        <th>Create Date</th>
+                        <th>Update Date</th>
+                        <th width="10%">Action</th>
                       </tr>
                     </thead>
                     {apiData && apiData.length > 0 ? (
@@ -272,34 +212,26 @@ const Index = () => {
                         {apiData &&
                           apiData.map((item) => {
                             return (
-                              <tr key={item.id}>
-                                <td>{item.id}</td>
+                              <tr key={item.productId}>
+                                <td>{item.productId}</td>
                                 <td>
                                   <img
                                     className="card-img"
                                     style={{ width: "120px" }}
-                                    src={item.userAvatar}
-                                    alt={item.userName}
+                                    src={item.path}
+                                    alt="Image"
                                   />
                                 </td>
-                                <td>{item.userName}</td>
-                                <td>{item.userFullName}</td>
-                                <td>{item.userEmail}</td>
-                                <td>{item.userPhoneNumber}</td>
-                                <td>{item.userAddress}</td>
                                 <td>
-                                  {item.roleNames.length > 0
-                                    ? item.roleNames.join(", ")
-                                    : "No roles assigned"}
+                                  {new Date(item.createDate).toLocaleString()}
                                 </td>
-                                <td>{item.userGender ? "Male" : "Female"}</td>
                                 <td>
-                                  {item.userActive ? "Active" : "InActive"}
+                                  {new Date(item.updateDate).toLocaleString()}
                                 </td>
                                 <td>
                                   <div className="flex align-items-center list-user-action">
                                     <Link
-                                      to={`/admin/account/edit/${item.id}`}
+                                      to={`/admin/product/image/edit/${item.productId}/${item.productImageId}`}
                                       className="bg-primary"
                                       data-toggle="tooltip"
                                       data-placement="top"
@@ -313,7 +245,9 @@ const Index = () => {
                                       data-placement="top"
                                       title="Delete"
                                       data-original-title="Delete"
-                                      onClick={() => handleDelete(item.id)}
+                                      onClick={() =>
+                                        handleDelete(item.productId)
+                                      }
                                       style={{
                                         fontSize: "16px",
                                         width: "25px",
@@ -339,7 +273,7 @@ const Index = () => {
                       <tbody>
                         <tr>
                           <td
-                            colSpan={11}
+                            colSpan={5}
                             style={{
                               height: "350px",
                               background: "rgb(241 241 241)",

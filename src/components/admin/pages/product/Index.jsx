@@ -14,7 +14,7 @@ const Index = () => {
     const [res, err] = await productService.findAll();
     if (res) {
       setApiData(res.data.data);
-      if (res.data.length > 0) setTotalPages(res.data.totalPages);
+      if (res.data) setTotalPages(res.data.totalPages);
     } else {
       console.log(err);
     }

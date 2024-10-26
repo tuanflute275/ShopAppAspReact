@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import * as categoryService from "../../../../services/CategoryService";
 import Swal from "sweetalert2";
 
-const UpdateCategory = () => {
+const Edit = () => {
   const { id } = useParams();
 
   const initState = {
@@ -148,4 +148,4 @@ const UpdateCategory = () => {
   );
 };
 
-export default UpdateCategory;
+export default Edit;

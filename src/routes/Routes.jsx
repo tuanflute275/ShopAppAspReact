@@ -26,6 +26,14 @@ import ProductCreate from "../components/admin/pages/product/Create";
 import ProductEdit from "../components/admin/pages/product/Edit";
 import ProductComment from "../components/admin/pages/product/Comments";
 
+import ProductImageIndex from "../components/admin/pages/productImage/Index";
+import ProductImageCreate from "../components/admin/pages/productImage/Create";
+import ProductImageEdit from "../components/admin/pages/productImage/Edit";
+
+import ProductAttributeIndex from "../components/admin/pages/productAttribute/Index";
+import ProductAttributeCreate from "../components/admin/pages/productAttribute/Create";
+import ProductAttributeEdit from "../components/admin/pages/productAttribute/Edit";
+
 import AccountIndex from "../components/admin/pages/account/Index";
 import AccountCreate from "../components/admin/pages/account/Create";
 import AccountEdit from "../components/admin/pages/account/Edit";
@@ -124,7 +132,30 @@ export const adminRoutes = [
     path: "admin/product/comment/:id",
     element: <AdminMasterLayout child={<ProductComment />} />,
   },
-
+  {
+    path: "admin/product/image/:id",
+    element: <AdminMasterLayout child={<ProductImageIndex />} />,
+  },
+  {
+    path: "admin/product/image/create/:id",
+    element: <AdminMasterLayout child={<ProductImageCreate />} />,
+  },
+  {
+    path: "admin/product/image/edit/:productId/:imageId",
+    element: <AdminMasterLayout child={<ProductImageEdit />} />,
+  },
+  {
+    path: "admin/product/attribute/:id",
+    element: <AdminMasterLayout child={<ProductAttributeIndex />} />,
+  },
+  {
+    path: "admin/product/attribute/create/:id",
+    element: <AdminMasterLayout child={<ProductAttributeCreate />} />,
+  },
+  {
+    path: "admin/product/attribute/edit/:productId/:attributeId",
+    element: <AdminMasterLayout child={<ProductAttributeEdit />} />,
+  },
   {
     path: "admin/account",
     element: <AdminMasterLayout child={<AccountIndex />} />,

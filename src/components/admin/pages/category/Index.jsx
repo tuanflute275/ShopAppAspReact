@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import * as categoryService from "../../../../services/CategoryService";
 import Swal from "sweetalert2";
 
-const ListCategory = () => {
+const Index = () => {
   const formRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -14,7 +14,7 @@ const ListCategory = () => {
     const [res, err] = await categoryService.findAll();
     if (res) {
       setApiData(res.data.data);
-      if (res.data.length > 0) setTotalPages(res.data.totalPages);
+      if (res.data) setTotalPages(res.data.totalPages);
     } else {
       console.log(err);
     }
@@ -403,4 +403,4 @@ const ListCategory = () => {
   );
 };
 
-export default ListCategory;
+export default Index;
