@@ -64,6 +64,11 @@ const AdminSideBar = () => {
               </Link>
             </li>
             <li>
+              <Link to={"/admin/order"}>
+                <i className="ri-record-circle-line"></i>Order Management
+              </Link>
+            </li>
+            <li>
               <Link to={"/admin/blog"}>
                 <i className="ri-record-circle-line"></i>Blog Management
               </Link>

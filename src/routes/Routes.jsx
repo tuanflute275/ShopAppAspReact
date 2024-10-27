@@ -3,6 +3,10 @@ import AdminMasterLayout from "../components/admin/layouts/AdminMasterLayout";
 import AdminHome from "../components/admin/pages/home/AdminHome";
 import LogIndex from "../components/admin/pages/log/Index";
 import SubscriptionIndex from "../components/admin/pages/subscription/Index";
+import OrderIndex from "../components/admin/pages/order/Index";
+import OrderEdit from "../components/admin/pages/order/Edit";
+import OrderDetail from "../components/admin/pages/order/Detail";
+import OrderDetails from "../components/admin/pages/order/Details";
 
 import CategoryIndex from "../components/admin/pages/category/Index";
 import CategoryCreate from "../components/admin/pages/category/Create";
@@ -63,6 +67,22 @@ export const adminRoutes = [
   {
     path: "admin/subscription",
     element: <AdminMasterLayout child={<SubscriptionIndex />} />,
+  },
+  {
+    path: "admin/order",
+    element: <AdminMasterLayout child={<OrderIndex />} />,
+  },
+  {
+    path: "admin/order/detail/:id",
+    element: <AdminMasterLayout child={<OrderDetail />} />,
+  },
+  {
+    path: "admin/order/list-detail/:id",
+    element: <AdminMasterLayout child={<OrderDetails />} />,
+  },
+  {
+    path: "admin/order/edit/:id",
+    element: <AdminMasterLayout child={<OrderEdit />} />,
   },
   {
     path: "admin/category",
