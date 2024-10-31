@@ -50,12 +50,17 @@ import UserRoleIndex from "../components/admin/pages/userRole/Index";
 import UserRoleCreate from "../components/admin/pages/userRole/Create";
 import UserRoleEdit from "../components/admin/pages/userRole/Edit";
 
+
 //  =============================== USER ROUTE ============================== //
 import UserMasterLayout from "../components/user/layouts/UserMasterLayout";
 import Home from "../components/user/pages/home/Home";
 import Shop from "../components/user/pages/shop/Shop";
 
 export const adminRoutes = [
+  {
+    path: "/admin/*",
+    element: <AdminMasterLayout child={<AdminHome />} />,
+  },
   {
     path: "/admin",
     element: <AdminMasterLayout child={<AdminHome />} />,
@@ -215,6 +220,10 @@ export const adminRoutes = [
 ];
 
 export const clientRoutes = [
+  {
+    path: "/*",
+    element: <UserMasterLayout child={<Home />} />,
+  },
   {
     path: "",
     element: <UserMasterLayout child={<Home />} />,

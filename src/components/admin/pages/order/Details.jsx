@@ -18,6 +18,16 @@ const Details = () => {
     }
   };
 
+  const handleExportExcel = async (id) => {
+    const [result, error] = await orderService.findById(id);
+    if (result) {
+      setOrderData(result.data);
+      setOrderDetails(result.data.orderDetails || []);
+    } else {
+      console.error("Error loading order data:", error);
+    }
+  };
+
   useEffect(() => {
     fetchOrderData(id);
   }, [id]);
@@ -90,12 +100,12 @@ const Details = () => {
                   <Link to="/admin/order" className="btn btn-danger mb-2 mr-2">
                     Back
                   </Link>
-                  <Link
-                    to={`/admin/order/export/${orderData.orderId}`}
+                  <button
+                    onClick={(e) => handleExportExcel()}
                     className="btn btn-primary mb-2"
                   >
                     Download Excel
-                  </Link>
+                  </button>
                   <table className="data-tables table table-striped table-bordered">
                     <thead>
                       <tr>

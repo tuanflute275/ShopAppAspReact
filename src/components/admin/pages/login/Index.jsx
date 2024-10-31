@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as AuthServices from "../../services/AuthService";
+import * as AuthServices from "../../../../services/AuthService";
+import * as accountServices from "../../../../services/AccountService";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "../../redux/reducers/user";
+import { setToken, setUser } from "../../../../redux/reducers/user";
+import { jwtDecode } from "jwt-decode";
 
-function Login() {
+function Index() {
   const initData = {
-    userName: "",
-    userPassword: "",
+    UsernameOrEmail: "",
+    password: "",
   };
   const [loginData, setLoginData] = useState(initData);
   const navigate = useNavigate();
@@ -23,14 +25,28 @@ function Login() {
     e.preventDefault();
     const [result, error] = await AuthServices.login(loginData);
     if (result) {
-      console.log(result);
-      dispatch(setUser(result.data.user));
-      dispatch(setToken(result.data.jwtToken));
+      dispatch(setToken(result.data.token));
 
-      let role = result.data.user.role[0].roleName;
-      if (role === "Admin") {
+      // Giải mã token (giả sử bạn đã cài đặt jwt-decode)
+      const decodedToken = jwtDecode(result.data.token);
+      console.log("Decoded Token: ", decodedToken);
+
+      // Lấy thông tin người dùng
+      const userId = decodedToken.nameid;
+      const userResult = await accountServices.findById(userId);
+      if (userResult) {
+        dispatch(setUser(userResult[0].data));
+      } else {
+        console.error("Failed to fetch user details");
+      }
+
+      // Lấy tất cả vai trò từ token
+      const roles = decodedToken.role; // roles là một mảng
+
+      // Kiểm tra vai trò và điều hướng
+      if (roles.includes("Admin")) {
         navigate("/admin");
-      } else if (role === "User") {
+      } else if (roles.includes("User")) {
         navigate("/");
       } else {
         navigate("/");
@@ -74,24 +90,24 @@ function Login() {
                     onSubmit={(e) => handleSubmitForm(e)}
                   >
                     <div className="form-group">
-                      <label htmlFor="username">User Name</label>
+                      <label htmlFor="UsernameOrEmail">User Name</label>
                       <input
                         type="text"
                         className="form-control mb-0"
-                        id="username"
-                        placeholder="Enter your username..."
-                        name="userName"
+                        id="UsernameOrEmail"
+                        placeholder="Enter your UsernameOrEmail..."
+                        name="UsernameOrEmail"
                         onChange={(e) => handleChangeValue(e)}
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="userPassword">Password</label>
+                      <label htmlFor="password">Password</label>
                       <input
                         type="password"
                         className="form-control mb-0"
-                        id="userPassword"
-                        placeholder="Enter your userPassword..."
-                        name="userPassword"
+                        id="password"
+                        placeholder="Enter your password..."
+                        name="password"
                         onChange={(e) => handleChangeValue(e)}
                       />
                     </div>
@@ -114,4 +130,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Index;

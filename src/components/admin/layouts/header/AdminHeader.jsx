@@ -17,7 +17,7 @@ const AdminHeader = () => {
       showConfirmButton: false,
       timer: 1500,
     });
-    navigate("/login");
+    navigate("/admin/login");
   };
   return (
     <div className="iq-top-navbar">
@@ -93,13 +93,13 @@ const AdminHeader = () => {
                   className="search-toggle iq-waves-effect d-flex align-items-center"
                 >
                   <img
-                    src="https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/318878919_668661138058064_1673297175570757867_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=y_ojy4xeGqQQ7kNvgGUeAlV&_nc_ht=scontent.fhan17-1.fna&oh=00_AYAAQFmdeVINbhHnzppfiHFqoWxv52M9NbT7xJQ9g1pPCQ&oe=6655FD8B"
+                    src={userData?.user.userAvatar || ""}
                     className="img-fluid rounded-circle mr-3"
                     alt="user"
                   />
                   <div className="caption">
-                    <h6 className="mb-1 line-height">tuanflute275</h6>
-                    <p className="mb-0 text-primary">Tài Khoản</p>
+                    <h6 className="mb-1 line-height">{userData?.user.userName || "Admin"}</h6>
+                    <p className="mb-0 text-primary">{userData.user.userEmail || "Admin"}</p>
                   </div>
                 </a>
                 <div className="iq-sub-dropdown iq-user-dropdown">
@@ -107,7 +107,7 @@ const AdminHeader = () => {
                     <div className="iq-card-body p-0 ">
                       <div className="bg-primary p-3">
                         <h5 className="mb-0 text-white line-height">
-                          Xin Chào tuanflute275
+                          Xin Chào {userData?.user.userFullName || "Admin"}
                         </h5>
                       </div>
 
