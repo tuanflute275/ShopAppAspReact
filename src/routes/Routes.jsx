@@ -50,11 +50,23 @@ import UserRoleIndex from "../components/admin/pages/userRole/Index";
 import UserRoleCreate from "../components/admin/pages/userRole/Create";
 import UserRoleEdit from "../components/admin/pages/userRole/Edit";
 
-
 //  =============================== USER ROUTE ============================== //
+import Login from "../components/user/pages/auth/Login";
+import Register from "../components/user/pages/auth/Register";
+import Forgot from "../components/user/pages/auth/ForgotPassword";
+import Profile from "../components/user/pages/auth/Profile";
+import ChangePass from "../components/user/pages/auth/ChangePassword";
+
 import UserMasterLayout from "../components/user/layouts/UserMasterLayout";
 import Home from "../components/user/pages/home/Home";
 import Shop from "../components/user/pages/shop/Shop";
+import Contact from "../components/user/pages/contact/Contact";
+import Faq from "../components/user/pages/faq/Faq";
+import Blog from "../components/user/pages/blog/Blog";
+import Detail from "../components/user/pages/detail/Detail";
+import Cart from "../components/user/pages/cart/Cart";
+import Checkout from "../components/user/pages/checkout/Checkout";
+import OrderSuccess from "../components/user/pages/utils/OrderSuccess";
 
 export const adminRoutes = [
   {
@@ -221,6 +233,26 @@ export const adminRoutes = [
 
 export const clientRoutes = [
   {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/forgot-password",
+    element: <Forgot />,
+  },
+  {
+    path: "/profile",
+    element: <UserMasterLayout child={<Profile />} />,
+  },
+  {
+    path: "/change-password",
+    element: <UserMasterLayout child={<ChangePass />} />,
+  },
+  {
     path: "/*",
     element: <UserMasterLayout child={<Home />} />,
   },
@@ -235,5 +267,33 @@ export const clientRoutes = [
   {
     path: "/shop",
     element: <UserMasterLayout child={<Shop />} />,
+  },
+  {
+    path: "/contact",
+    element: <UserMasterLayout child={<Contact />} />,
+  },
+  {
+    path: "/faq",
+    element: <UserMasterLayout child={<Faq />} />,
+  },
+  {
+    path: "/blog",
+    element: <UserMasterLayout child={<Blog />} />,
+  },
+  {
+    path: "/detail/:id",
+    element: <UserMasterLayout child={<Detail />} />,
+  },
+  {
+    path: "/cart",
+    element: <UserMasterLayout child={<Cart />} />,
+  },
+  {
+    path: "/checkout",
+    element: <UserMasterLayout child={<Checkout />} />,
+  },
+  {
+    path: "/order-success",
+    element: <OrderSuccess />,
   },
 ];

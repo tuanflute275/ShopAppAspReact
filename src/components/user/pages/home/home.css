@@ -1,0 +1,380 @@
+.btn-shop-now {
+  text-decoration: none;
+  color: #fff;
+  background: #0dd6b8;
+  transition: all 0.4s;
+  padding: 10px 35px;
+  margin-right: 27px;
+}
+.btn-shop-now:hover {
+  background-color: #333;
+}
+main {
+  margin-top: 110px;
+  /* start card */
+}
+main .heading {
+  text-align: center;
+  text-transform: uppercase;
+  padding: 50px 0;
+  margin-bottom: 0 !important;
+}
+main .heading span {
+  color: var(--main-color);
+}
+main .heading .trending {
+  text-align: center;
+  text-transform: uppercase;
+  padding: 30px 0;
+}
+main .heading .trending span {
+  color: var(--main-color);
+}
+@media screen and (max-width: 768px) {
+  main .heading {
+    padding: 25px 0;
+    margin: 0 !important;
+  }
+  main .heading.trending {
+    margin: 0 !important;
+    padding-top: 45px;
+    padding-bottom: 25px;
+  }
+}
+main .our-blog .card-blog {
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05), 0 15px 40px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+main .our-blog .card-blog img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+main .our-blog .card-blog:hover img {
+  transform: scale(1.15);
+}
+main .our-blog .title-blog {
+  width: 100%;
+  margin: 20px 0;
+  text-align: center;
+}
+main .our-blog .title-blog a {
+  text-decoration: none;
+  color: var(--black0-color);
+  transition: all 0.3s;
+  font-size: 18px;
+  line-height: 35px;
+}
+main .our-blog .title-blog a:hover {
+  color: var(--main-color);
+}
+main .banner-sale-1 {
+  padding-top: 69px;
+}
+main .banner-sale-1 .banner-info:hover .banner-title {
+  background: rgba(147, 127, 108, 0.85);
+}
+main .banner-sale-1 .banner-info .banner-title {
+  top: 0;
+  right: 0;
+  height: 100%;
+  padding: 56px 30px;
+  color: var(--white-color);
+  text-align: center;
+  transition: all 0.3s;
+  background: rgba(143, 107, 108, 0.8);
+}
+main .banner-sale-1 .banner-info .banner-title:hover {
+  background: rgba(147, 127, 108, 0.85);
+}
+main .banner-sale-1 .banner-info .banner-title .banner-heading {
+  font-size: 35px;
+  line-height: 1.2;
+}
+main .banner-sale-1 .banner-info .banner-title .banner-sale_price {
+  color: var(--white-color);
+  font-size: 80px;
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  line-height: 1;
+  padding: 20px 8px 10px 8px;
+  margin: 30px 0 10px 0;
+}
+main .banner-sale-1 .banner-info .banner-title .banner-text {
+  font-size: 35px;
+  line-height: 1.2;
+}
+@media screen and (max-width: 768px) {
+  main .banner-sale-1 .banner-info .banner-title {
+    padding: 30px 24px;
+  }
+  main .banner-sale-1 .banner-info .banner-title .banner-heading {
+    font-size: 20px;
+  }
+  main .banner-sale-1 .banner-info .banner-title .banner-sale_price {
+    font-size: 30px;
+    padding: 10px;
+    margin: 10px;
+  }
+  main .banner-sale-1 .banner-info .banner-title .banner-text {
+    font-size: 30px;
+  }
+}
+.banner-sale-2 {
+  padding-top: 50px;
+}
+.banner-sale-2 .banner-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 40px 35px 45px;
+  max-width: 70%;
+  text-align: center;
+  border-radius: 5px;
+}
+.banner-sale-2 .banner-title .subheading {
+  font-size: 15px;
+  color: var(--main-color);
+  line-height: 1;
+}
+.banner-sale-2 .banner-title .heading {
+  font-size: 40px;
+  color: var(--main-color);
+  padding: 0 !important;
+}
+.banner-sale-2 .banner-title .salePrice {
+  font-size: 115px;
+  color: var(--black0-color);
+  font-family: optima;
+  border-top: 1px solid #707070;
+  border-bottom: 1px solid #707070;
+  line-height: 1;
+  padding: 20px 8px 10px;
+  margin: 25px 0 12px 0;
+}
+.banner-sale-2 .banner-title .text {
+  font-size: 20px;
+  color: var(--black0-color);
+}
+.banner-sale-2 .banner-title .btn-banner {
+  margin-top: 35px;
+}
+.banner-sale-2 .banner-title .btn-banner a {
+  background: #79a206;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: var(--white-color);
+  transition: all 0.3s;
+}
+.banner-sale-2 .banner-title .btn-banner a:hover {
+  background: #000;
+}
+@media screen and (max-width: 768px) {
+  .banner-sale-2 .banner-title {
+    padding: 0 !important;
+    padding: 15px 15px 15px;
+  }
+  .banner-sale-2 .banner-title .subheading {
+    font-size: 12px;
+    padding-top: 10px;
+  }
+  .banner-sale-2 .banner-title .heading {
+    font-size: 15px;
+    line-height: 1;
+  }
+  .banner-sale-2 .banner-title .salePrice {
+    font-size: 24px;
+    padding: 8px 8px 3px;
+    margin: 10px 0 8px 0;
+  }
+  .banner-sale-2 .banner-title .text {
+    font-size: 15px;
+  }
+  .banner-sale-2 .banner-title .btn-banner {
+    padding: 0;
+    margin: 0;
+    padding-bottom: 15px;
+    padding-top: 10px;
+  }
+  .banner-sale-2 .banner-title .btn-banner a {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+}
+main .shipping_inner {
+  padding-top: 95px;
+  padding-bottom: 95px;
+}
+main .shipping_inner .single_shipping .shipping_icon {
+  margin-right: 22px;
+}
+main .shipping_inner .single_shipping .shipping_icon i {
+  font-size: 27px;
+}
+main .shipping_inner .single_shipping .shipping_text h3 {
+  font-size: 22px;
+}
+main .shipping_inner .single_shipping .shipping_text p {
+  color: #999;
+}
+@media screen and (max-width: 768px) {
+  main .shipping_inner .single_shipping {
+    flex-direction: column !important;
+  }
+  main .shipping_inner .single_shipping .shipping_icon {
+    margin-right: 22px;
+    margin-bottom: 10px;
+  }
+  main .shipping_inner .single_shipping .shipping_icon i {
+    font-size: 27px;
+  }
+  main .shipping_inner .single_shipping .shipping_text h3 {
+    font-size: 22px;
+  }
+}
+main .instagram-custom-col {
+  flex: 0 0 auto;
+  width: 12.5%;
+  padding: 0;
+}
+main .instagram-custom-col .instagram-item {
+  transition: all 0.4s;
+}
+main .instagram-custom-col .instagram-item:hover {
+  opacity: 0.7;
+}
+@media screen and (max-width: 768px) {
+  main .instagram-custom-col {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+}
+
+/* start card */
+.card-category .sp-card-2 {
+  border: 1px solid #f9f9f9;
+  text-align: left;
+
+  -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+}
+
+.card-category .sp-card-2 .overlap {
+  background: #3f51b57a;
+  width: inherit;
+  height: 0;
+  position: absolute;
+  text-align: center;
+  opacity: 0;
+  width: 93%;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.card-category .sp-card-2:hover .overlap {
+  opacity: 1;
+  height: 204px;
+  width: 92%;
+}
+
+.card-category .sp-card-2 .overlap a {
+  position: relative;
+  top: 50%;
+  text-decoration: none;
+  color: #673ab7;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #fff;
+}
+
+.card-category .sp-card-2 .card-image {
+  text-align: center;
+}
+
+.card-category .sp-card-2 .card-image img {
+  height: 200px;
+}
+
+.card-category .sp-card-2 .card-content {
+  padding: 20px;
+}
+
+.card-category .sp-card-2 .card-content .card-title {
+  font-weight: 600;
+}
+
+.card-category .sp-card-2 .card-content .price-start {
+  font-weight: 600;
+  color: #673ab7;
+  float: right;
+}
+
+.card-category .sp-card-2 .card-content .card-caption {
+  font-size: 14px;
+  color: #717171;
+  padding: 15px 0px 10px;
+}
+
+.card-category .sp-card-2 .card-content .cloth-size,
+.card-category .sp-card-2 .card-content .cloth-colors {
+  padding: 10px 0;
+  font-size: 13px;
+  color: #545454;
+  text-transform: uppercase;
+}
+
+.card-category .sp-card-2 .card-content .cloth-colors span:not(:nth-child(1)) {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 40px;
+}
+
+.card-category .sp-card-2 .card-content .cloth-colors .color1 {
+  background: red;
+  border: 1px solid black;
+  margin-left: 10px;
+}
+
+.card-category .sp-card-2 .card-content .cloth-colors .color2 {
+  background: blue;
+  border: 1px solid black;
+  margin-left: 35px;
+}
+
+.card-category .sp-card-2 .card-content .cloth-colors .color3 {
+  background: Orange;
+  border: 1px solid black;
+  margin-left: 60px;
+}
+
+.card-category .sp-card-2 .card-content .cloth-colors .color4 {
+  background: black;
+  border: 1px solid black;
+  margin-left: 85px;
+}
+
+@media only screen and (max-width: 480px) {
+  .card-category .sp-card-2 {
+    width: 100%;
+  }
+
+  .card-category ul li:nth-child(3) {
+    margin-top: 25px;
+    padding: 0 15px;
+  }
+}
+
+.pagination {
+  margin: auto;
+}

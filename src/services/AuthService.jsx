@@ -13,7 +13,7 @@ export const login = async (data) => {
 
 export const register = async (data) => {
   try {
-    const res = await http.save(`${URLAPI}auth/register`, data);
+    const res = await http.save(`${URLAPI}/auth/register`, data);
     return [res, null];
   } catch (error) {
     return [null, error];
@@ -22,7 +22,7 @@ export const register = async (data) => {
 
 export const forgotPassword = async (data) => {
   try {
-    const res = await http.save(`${URLAPI}auth/forgotPassword`, data);
+    const res = await http.save(`${URLAPI}/auth/forgotPassword`, data);
     return [res, null];
   } catch (error) {
     return [null, error];
@@ -31,7 +31,10 @@ export const forgotPassword = async (data) => {
 
 export const changePassword = async (userId, data) => {
   try {
-    const res = await http.save(`${URLAPI}auth/forgotPassword/${userId}`, data);
+    const res = await http.save(
+      `${URLAPI}/auth/changePassword/${userId}`,
+      data
+    );
     return [res, null];
   } catch (error) {
     return [null, error];

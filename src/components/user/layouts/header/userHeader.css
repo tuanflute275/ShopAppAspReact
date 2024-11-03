@@ -1,0 +1,92 @@
+::selection {
+    background-color: var(--main-color);
+    color: var(--white-color);
+  }
+  body {
+    font-family: "Poppins", sans-serif;
+  }
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.9);
+  }
+  .menu {
+    font-family: "Open Sans Condensed", sans-serif;
+  }
+  .menu li {
+    margin: 0 15px;
+  }
+  .menu a {
+    font-size: 20px;
+    margin: 0 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--white-color);
+    display: block;
+    position: relative;
+    padding: 4px 0;
+  }
+  .menu a::before {
+    content: "";
+    width: 100%;
+    height: 4px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: var(--white-color);
+    transition: 0.5s transform ease;
+    transform: scale3d(0, 1, 1);
+    transform-origin: 0 50%;
+    background: #e91e63;
+    transform-origin: 100% 50%;
+  }
+  .menu a:hover::before {
+    transform: scale3d(1, 1, 1);
+    transform-origin: 0 50%;
+  }
+  .header_account {
+    color: var(--black3-color);
+  }
+  .header_account ul li {
+    list-style: none;
+    margin: 0 10px;
+  }
+  .header_account ul li a {
+    font-size: 20px;
+    text-decoration: none;
+    padding: 4px 10px;
+  }
+  .header_account ul li a i {
+    color: var(--black3-color);
+    font-size: 25px;
+  }
+  .header_heart,
+  .header_shopping_cart {
+    position: relative;
+  }
+  .header_heart span.item_count,
+  .header_shopping_cart span.item_count {
+    position: absolute;
+    top: -10px;
+    left: 23px;
+    background: var(--main-color);
+    color: var(--white-color);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 18px;
+  }
+  .avatar {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+  }
+  .show-avatar {
+    position: absolute;
+    left: -42px !important;
+    top: 78px !important;
+  }
+  

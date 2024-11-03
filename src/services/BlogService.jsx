@@ -19,6 +19,14 @@ export const findById = async (id) => {
     return [null, error];
   }
 };
+export const findByCondition = async (limit) => {
+  try {
+    const res = await http.get(`${URLAPI}/blog/condition?limit=${limit}`);
+    return [res, null];
+  } catch (error) {
+    return [null, error];
+  }
+};
 
 export const search = async (name, sort, page) => {
   try {

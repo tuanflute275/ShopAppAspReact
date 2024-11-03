@@ -1,15 +1,15 @@
-import React from 'react'
-import UserHeader from './header/UserHeader'
-import UserFooter from './footer/UserFooter'
+import React from "react";
+import UserHeader from "./header/UserHeader";
+import UserFooter from "./footer/UserFooter";
 
-const UserMasterLayout = ({child}) => {
+const UserMasterLayout = ({ child }) => {
   return (
-    <>
-    <UserHeader />
-    {child}
-    <UserFooter/>
-    </>
-  )
-}
+    <div>
+      <UserHeader />
+      {child}
+      <UserFooter />
+    </div>
+  );
+};
 
-export default UserMasterLayout
+export default UserMasterLayout;

@@ -11,6 +11,43 @@ export const findAll = async () => {
   }
 };
 
+export const findProductNew = async (limit) => {
+  try {
+    const res = await http.get(`${URLAPI}/product/new?limit=${limit}`);
+    return [res, null];
+  } catch (error) {
+    return [null, error];
+  }
+};
+export const findProductSale = async (limit) => {
+  try {
+    const res = await http.get(`${URLAPI}/product/sale?limit=${limit}`);
+    return [res, null];
+  } catch (error) {
+    return [null, error];
+  }
+};
+export const findProductRelated = async (id, limit) => {
+  try {
+    const res = await http.get(
+      `${URLAPI}/product/related/${id}?limit=${limit}`
+    );
+    return [res, null];
+  } catch (error) {
+    return [null, error];
+  }
+};
+export const findByCategorySlug = async (categorySlug) => {
+  try {
+    const res = await http.get(
+      `${URLAPI}/product/category/${categorySlug}`
+    );
+    return [res, null];
+  } catch (error) {
+    return [null, error];
+  }
+};
+
 export const findById = async (id) => {
   try {
     const res = await http.get(`${URLAPI}/product/${id}`);
